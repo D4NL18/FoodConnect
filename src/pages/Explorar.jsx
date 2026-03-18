@@ -109,7 +109,10 @@ export default function Explorar({ onRestaurantClick }) {
           <div key={restaurant.id} className="card" style={{ marginBottom: 0, cursor: 'pointer' }} onClick={() => onRestaurantClick(restaurant.id)}>
             <img src={restaurant.image} alt={restaurant.name} style={{ width: '100%', height: '180px', objectFit: 'cover' }} />
             <div style={{ padding: '16px' }}>
-              <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '4px' }}>{restaurant.name}</h3>
+              <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                {restaurant.name}
+                {restaurant.handle && <span style={{ fontSize: '13px', color: 'var(--text-muted)', fontWeight: 400 }}>{restaurant.handle}</span>}
+              </h3>
               <div style={{ fontSize: '13px', color: '#6b7280', display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '12px' }}>
                 <MapPin size={14} /> {restaurant.location} ({restaurant.distance})
               </div>

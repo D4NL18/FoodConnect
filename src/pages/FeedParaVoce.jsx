@@ -35,10 +35,15 @@ export default function FeedParaVoce({ onRestaurantClick }) {
         <img src={restaurant.image} alt={restaurant.name} className="review-image" />
         <div style={{ padding: '0 0 16px 0' }}>
           <div className="highlight-reason">{restaurant.highlightReason}</div>
-          <h2 className="highlight-title">{restaurant.name}</h2>
-          <p className="highlight-desc">{restaurant.highlightDesc}</p>
-          <div style={{ padding: '0 16px' }}>
-            <button className="btn-primary">Ver Cardápio Completo</button>
+          <div className="card-content" style={{ paddingBottom: '16px' }}>
+            <h2 className="highlight-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              {restaurant.name}
+              {restaurant.handle && <span style={{ fontSize: '14px', color: 'var(--text-muted)', fontWeight: 500 }}>{restaurant.handle}</span>}
+            </h2>
+            <p className="highlight-desc">{restaurant.highlightDesc}</p>
+            <div style={{ padding: '0 16px' }}>
+              <button className="btn-primary">Ver Cardápio Completo</button>
+            </div>
           </div>
         </div>
       </div>

@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Search, MapPin } from 'lucide-react';
+import { Search, MapPin, Users } from 'lucide-react';
 import { mockNearby, mockPeopleSearch } from '../data/mockData';
 import DirectMessageModal from './DirectMessageModal';
 
-export default function RightPanel({ activeTab, activePage, onRestaurantClick, onPostClick }) {
-  const showPeople = activePage === 'feed' && activeTab === 'amigos';
+export default function RightPanel({ activeTab, activePage, onRestaurantClick, onPostClick, currentUser }) {
+  const isRestaurant = currentUser?.type === 'restaurante';
+  const showPeople = isRestaurant || (activePage === 'feed' && activeTab === 'amigos');
   const [query, setQuery] = useState('');
   const [selectedPerson, setSelectedPerson] = useState(null);
 
@@ -16,6 +17,11 @@ export default function RightPanel({ activeTab, activePage, onRestaurantClick, o
       {showPeople ? (
         <>
           <div className="search-container">
+            {isRestaurant ? (
+              <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Users size={20} color="var(--primary-orange)" /> Clientes (Inbox)
+              </h3>
+            ) : null}
             <div className="search-input-wrapper">
               <Search size={18} />
               <input 

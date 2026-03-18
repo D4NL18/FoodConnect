@@ -2,6 +2,7 @@ export const mockRestaurants = [
   {
     id: 1,
     name: 'Oásis Veggie Gourmet',
+    handle: '@oasisveggiegourmet',
     location: 'Centro • Restaurante Vegano',
     image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     rating: 4.8,
@@ -15,6 +16,7 @@ export const mockRestaurants = [
   {
     id: 2,
     name: 'Burger House - Pinheiros',
+    handle: '@burgerhouse',
     location: 'Pinheiros • Hamburgueria',
     image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     rating: 5.0,
@@ -28,6 +30,7 @@ export const mockRestaurants = [
   {
     id: 3,
     name: 'La Trattoria Bella',
+    handle: '@latrattoriabella',
     location: 'Jardins • Italiana',
     image: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     rating: 4.9,
@@ -41,6 +44,7 @@ export const mockRestaurants = [
   {
     id: 4,
     name: 'Sushi Master do Japa',
+    handle: '@sushimasterdojapa',
     location: 'Liberdade • Japonês',
     image: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     rating: 4.7,
@@ -54,6 +58,7 @@ export const mockRestaurants = [
   {
     id: 5,
     name: 'El Mexicano Loco',
+    handle: '@elmexicanoloco',
     location: 'Vila Madalena • Mexicana',
     image: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     rating: 4.5,
@@ -67,6 +72,7 @@ export const mockRestaurants = [
   {
     id: 6,
     name: 'Churrascaria Gaúcha do Sul',
+    handle: '@churrascariagauchadosul',
     location: 'Moema • Churrascaria',
     image: 'https://images.unsplash.com/photo-1544025162-d76694265947?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     rating: 4.6,
@@ -80,6 +86,7 @@ export const mockRestaurants = [
   {
     id: 7,
     name: 'Café Poético',
+    handle: '@cafepoetico',
     location: 'Vila Mariana • Cafeteria',
     image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     rating: 4.4,
@@ -93,6 +100,7 @@ export const mockRestaurants = [
   {
     id: 8,
     name: 'Frutos do Mar do Seu Zé',
+    handle: '@frutosdomardoseuze',
     location: 'Santos • Frutos do Mar',
     image: 'https://images.unsplash.com/photo-1559909441-3d30fa31e275?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     rating: 4.9,
@@ -106,6 +114,7 @@ export const mockRestaurants = [
   {
     id: 9,
     name: 'Bistrô do Parque',
+    handle: '@bistrodoparque',
     location: 'Ibirapuera • Bistrô Francês',
     image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     rating: 4.8,
@@ -119,6 +128,7 @@ export const mockRestaurants = [
   {
     id: 10,
     name: 'Padaria Imperial',
+    handle: '@padariaimperial',
     location: 'Higienópolis • Padaria Artesanal',
     image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     rating: 4.3,
@@ -132,6 +142,7 @@ export const mockRestaurants = [
   {
     id: 11,
     name: 'Pizzaria Napolitana Vera',
+    handle: '@pizzarianapolitanavera',
     location: 'Mooca • Pizzaria Italiana',
     image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     rating: 4.9,
@@ -145,6 +156,7 @@ export const mockRestaurants = [
   {
     id: 12,
     name: 'Ramen do Sensei',
+    handle: '@ramendosensei',
     location: 'Liberdade • Japonesa',
     image: 'https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     rating: 4.8,
@@ -158,6 +170,7 @@ export const mockRestaurants = [
   {
     id: 13,
     name: 'Cozinha da Vó Benedita',
+    handle: '@cozinhadavobenedita',
     location: 'Penha • Comida Caseira',
     image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     rating: 4.7,
@@ -171,6 +184,7 @@ export const mockRestaurants = [
   {
     id: 14,
     name: 'Speakeasy Cocktail Bar',
+    handle: '@speakeasycocktailbar',
     location: 'Bela Vista • Bar & Petiscos',
     image: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     rating: 4.6,
@@ -184,6 +198,7 @@ export const mockRestaurants = [
   {
     id: 15,
     name: 'Terapia Grill & Bar',
+    handle: '@terapiagrillbar',
     location: 'Itaim Bibi • Americana',
     image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     rating: 4.4,
@@ -197,6 +212,7 @@ export const mockRestaurants = [
   {
     id: 16,
     name: 'María Bonita Taquería',
+    handle: '@mariabonitataqueria',
     location: 'Pinheiros • Mexicana',
     image: 'https://images.unsplash.com/photo-1552332386-f8dd00dc2f85?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     rating: 4.5,
@@ -210,6 +226,7 @@ export const mockRestaurants = [
   {
     id: 17,
     name: 'Osteria del Borgo',
+    handle: '@osteriadelborgo',
     location: 'São Caetano • Italiana',
     image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     rating: 4.6,
@@ -223,6 +240,7 @@ export const mockRestaurants = [
   {
     id: 18,
     name: "Thank God It's Falafel",
+    handle: '@thankgoditsfalafel',
     location: 'Consolação • Árabe & Vegano',
     image: 'https://images.unsplash.com/photo-1529042410759-befb1204b468?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     rating: 4.5,
@@ -236,6 +254,7 @@ export const mockRestaurants = [
   {
     id: 19,
     name: 'Don Sushi & Ceviche',
+    handle: '@donsushiceviche',
     location: 'Brooklin • Fusion Nikkei',
     image: 'https://images.unsplash.com/photo-1617611413010-1e3167d5e0a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     rating: 4.7,
@@ -249,6 +268,7 @@ export const mockRestaurants = [
   {
     id: 20,
     name: 'Assado & Bem-Passado',
+    handle: '@assadobempassado',
     location: 'Santo André • Churrasco Premium',
     image: 'https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     rating: 4.8,

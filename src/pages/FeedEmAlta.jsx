@@ -11,9 +11,12 @@ export default function FeedEmAlta({ onRestaurantClick }) {
           <div className="ranking-badge">#{index + 1}</div>
           <img src={restaurant.image} alt={restaurant.name} className="review-image" style={{ height: '300px' }} />
           
-          <div className="review-content">
-            <h2 className="highlight-title" style={{ padding: 0 }}>{restaurant.name}</h2>
-            <div className="review-time" style={{ marginBottom: '16px' }}>{restaurant.location}</div>
+          <div style={{ padding: '20px' }}>
+            <h2 className="highlight-title" style={{ padding: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+              {restaurant.name}
+              {restaurant.handle && <span style={{ fontSize: '14px', color: 'var(--text-muted)', fontWeight: 500 }}>{restaurant.handle}</span>}
+            </h2>
+            <div style={{ display: 'flex', gap: '12px', alignItems: 'center', color: '#6b7280', fontSize: '14px', marginTop: '8px', marginBottom: '12px' }}>{restaurant.location}</div>
             
             <div className="review-stats">
               <div className="stat-badge rating">

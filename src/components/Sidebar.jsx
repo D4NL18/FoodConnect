@@ -1,11 +1,11 @@
-import { Home, Search, Users, User, PlusCircle, UserSearch, Calendar } from 'lucide-react';
+import { Home, Search, Users, User, PlusCircle, UserSearch, Calendar, LogOut } from 'lucide-react';
 import { useState } from 'react';
 import CreatePostModal from './CreatePostModal';
 
-export default function Sidebar({ activePage, setActivePage }) {
+export default function Sidebar({ activePage, setActivePage, onLogout, userType }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const navItems = [
+  let navItems = [
     { id: 'feed', label: 'Feed', icon: Home },
     { id: 'explorar', label: 'Explorar', icon: Search },
     { id: 'buscar_pessoas', label: 'Buscar Pessoas', icon: UserSearch },
@@ -13,6 +13,13 @@ export default function Sidebar({ activePage, setActivePage }) {
     { id: 'reservas', label: 'Minhas Reservas', icon: Calendar },
     { id: 'perfil', label: 'Meu Perfil', icon: User },
   ];
+
+  if (userType === 'restaurante') {
+    navItems = [
+      { id: 'perfil', label: 'Meu Perfil', icon: User },
+      { id: 'reservas', label: 'Minhas Reservas', icon: Calendar },
+    ];
+  }
 
   return (
     <aside className="sidebar">
@@ -43,6 +50,34 @@ export default function Sidebar({ activePage, setActivePage }) {
         <button className="btn-primary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }} onClick={() => setIsModalOpen(true)}>
           <PlusCircle size={20} />
           Criar Post
+        </button>
+        <button
+          onClick={onLogout}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            width: '100%',
+            padding: '12px',
+            marginTop: '12px',
+            borderRadius: '8px',
+            color: 'var(--text-secondary)',
+            fontWeight: '600',
+            transition: 'all 0.2s',
+            cursor: 'pointer'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = '#fee2e2';
+            e.currentTarget.style.color = '#ef4444';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'transparent';
+            e.currentTarget.style.color = 'var(--text-secondary)';
+          }}
+        >
+          <LogOut size={20} />
+          Sair
         </button>
       </div>
 
