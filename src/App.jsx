@@ -16,6 +16,7 @@ import UserProfile from './pages/UserProfile';
 import MinhasReservas from './pages/MinhasReservas';
 import GerenciarReservas from './pages/GerenciarReservas';
 import GroupDetail from './pages/GroupDetail';
+import Dashboard from './pages/Dashboard';
 import AuthScreens from './components/AuthScreens';
 import { mockReservations } from './data/mockData';
 
@@ -122,6 +123,9 @@ function App() {
       }
       return <MinhasReservas reservations={reservations} onRestaurantClick={setActiveRestaurant} onUpdateReservation={handleUpdateReservation} currentUser={user} />;
     }
+    if (activePage === 'dashboard' && user?.type === 'restaurante') {
+      return <Dashboard />;
+    }
     
     if (activePage === 'comunidade') return <Comunidade onRestaurantClick={setActiveRestaurant} onGroupClick={setActiveGroup} />;
     
@@ -171,7 +175,7 @@ function App() {
         }}
         onLogout={() => setUser(null)}
       />
-      <main className="main-content">
+      <main className="main-content" style={(activePage === 'dashboard' || (activePage === 'reservas' && user?.type === 'restaurante')) ? { maxWidth: 'none', padding: '20px 12px' } : {}}>
         {renderContent()}
       </main>
         <RightPanel

@@ -1,4 +1,4 @@
-import { Home, Search, Users, User, PlusCircle, UserSearch, Calendar, LogOut } from 'lucide-react';
+import { Home, Search, Users, User, PlusCircle, UserSearch, Calendar, LogOut, BarChart2, Star } from 'lucide-react';
 import { useState } from 'react';
 import CreatePostModal from './CreatePostModal';
 
@@ -18,6 +18,7 @@ export default function Sidebar({ activePage, setActivePage, onLogout, userType 
     navItems = [
       { id: 'perfil', label: 'Meu Perfil', icon: User },
       { id: 'reservas', label: 'Minhas Reservas', icon: Calendar },
+      { id: 'dashboard', label: 'Dashboard', icon: BarChart2, premium: true },
     ];
   }
 
@@ -40,7 +41,15 @@ export default function Sidebar({ activePage, setActivePage, onLogout, userType 
               onClick={() => setActivePage(item.id)}
             >
               <Icon size={20} />
-              <span>{item.label}</span>
+              <span style={{ flex: 1 }}>{item.label}</span>
+              {item.premium && (
+                <Star
+                  size={13}
+                  fill="#f59e0b"
+                  color="#f59e0b"
+                  style={{ flexShrink: 0, filter: 'drop-shadow(0 0 3px rgba(245,158,11,0.5))' }}
+                />
+              )}
             </button>
           );
         })}

@@ -1,4 +1,4 @@
-import { Calendar, Clock, MapPin, Users, CheckCircle, XCircle, ChevronLeft, ChevronRight, Info, Search, Filter } from 'lucide-react';
+import { Calendar, Clock, MapPin, Users, CheckCircle, XCircle, ChevronLeft, ChevronRight, Info, Search, Filter, Star } from 'lucide-react';
 import { useState } from 'react';
 
 export default function GerenciarReservas({ reservations, onUpdateReservation }) {
@@ -30,7 +30,15 @@ export default function GerenciarReservas({ reservations, onUpdateReservation })
     if (['Pendente', 'Proposta Modificada (Cliente)'].includes(r.status)) return false;
     if (historicoFilters.date && r.date !== historicoFilters.date) return false;
     if (historicoFilters.time && !r.time.includes(historicoFilters.time)) return false;
-    if (historicoFilters.partySize && !r.partySize.includes(historicoFilters.partySize)) return false;
+    if (historicoFilters.partySize) {
+      const resNum = parseInt(r.partySize, 10);
+      const filterNum = parseInt(historicoFilters.partySize, 10);
+      if (historicoFilters.partySize === '4') {
+        if (isNaN(resNum) || resNum < 4) return false;
+      } else {
+        if (resNum !== filterNum) return false;
+      }
+    }
     if (historicoFilters.status && r.status !== historicoFilters.status) return false;
     return true;
   });
@@ -93,7 +101,7 @@ export default function GerenciarReservas({ reservations, onUpdateReservation })
 
 
   return (
-    <div className="card" style={{ padding: '24px' }}>
+    <div className="card" style={{ padding: '16px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
         <h1 style={{ fontSize: '24px', fontWeight: 700, margin: 0 }}>Gerenciamento de Reservas</h1>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px', background: '#f3f4f6', padding: '8px 16px', borderRadius: '8px' }}>
@@ -106,7 +114,7 @@ export default function GerenciarReservas({ reservations, onUpdateReservation })
       {/* Visão de Ocupação Semanal */}
       <div className="card" style={{ padding: '20px', marginBottom: '32px', border: '1px solid var(--border-color)', boxShadow: 'none' }}>
         <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          Disponibilidade Semanal da Lotação <Info size={16} color="var(--text-muted)" />
+          Disponibilidade Semanal da Lotação
         </h3>
         <div>
           <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '4px', tableLayout: 'fixed' }}>
@@ -411,7 +419,15 @@ export default function GerenciarReservas({ reservations, onUpdateReservation })
                 onMouseEnter={e => proposedTime && (e.currentTarget.style.transform = 'translateY(-1px)')}
                 onMouseLeave={e => proposedTime && (e.currentTarget.style.transform = 'none')}
               >
-                Sugerir a Mudança
+                <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                  Sugerir a Mudança
+                  <Star
+                    size={14}
+                    fill={proposedTime ? '#fde68a' : '#d1d5db'}
+                    color={proposedTime ? '#fde68a' : '#d1d5db'}
+                    style={{ filter: proposedTime ? 'drop-shadow(0 0 3px rgba(253,230,138,0.7))' : 'none', transition: 'all 0.2s' }}
+                  />
+                </span>
               </button>
             </div>
           </div>
