@@ -1,4 +1,4 @@
-import { Home, Search, Users, User, PlusCircle, UserSearch, Calendar, LogOut, BarChart2, Star, Megaphone } from 'lucide-react';
+import { Home, Search, Users, User, PlusCircle, UserSearch, Calendar, LogOut, BarChart2, Star, Megaphone, Rocket } from 'lucide-react';
 import { useState } from 'react';
 import CreatePostModal from './CreatePostModal';
 
@@ -12,6 +12,8 @@ export default function Sidebar({ activePage, setActivePage, onLogout, userType,
     { id: 'comunidade', label: 'Comunidade', icon: Users },
     { id: 'reservas', label: 'Minhas Reservas', icon: Calendar },
     { id: 'perfil', label: 'Meu Perfil', icon: User },
+    // Premium items last:
+    { id: 'turbos', label: 'Turbinar Posts', icon: Rocket },
   ];
 
   if (userType === 'cliente' && currentUser?.premium) {
@@ -22,6 +24,8 @@ export default function Sidebar({ activePage, setActivePage, onLogout, userType,
     navItems = [
       { id: 'perfil', label: 'Meu Perfil', icon: User },
       { id: 'reservas', label: 'Minhas Reservas', icon: Calendar },
+      // Premium items last:
+      { id: 'turbos', label: 'Turbinar Posts', icon: Rocket },
       { id: 'dashboard', label: 'Dashboard', icon: BarChart2, premium: true },
       { id: 'buscar_influencers', label: 'Buscar Influencers', icon: Megaphone, premium: true },
       { id: 'gerenciar_parcerias', label: 'Minhas Parcerias', icon: Star, premium: true },

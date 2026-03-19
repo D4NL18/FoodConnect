@@ -1,9 +1,9 @@
-import { ArrowLeft, Star, MessageCircle, Heart, Share2, Banknote, Send } from 'lucide-react';
+import { ArrowLeft, Star, MessageCircle, Heart, Share2, Banknote, Send, Eye } from 'lucide-react';
 import { mockReviews, mockRestaurants, mockPeopleSearch } from '../data/mockData';
 import { useState } from 'react';
 import ShareModal from '../components/ShareModal';
 
-export default function PostDetail({ postId, onBack, onRestaurantClick, activeUser, activePage }) {
+export default function PostDetail({ postId, onBack, onRestaurantClick, activeUser, activePage, currentUser }) {
   const baseReview = mockReviews.find(r => r.id === postId) || mockReviews[0];
   let review = { ...baseReview, user: { ...baseReview.user } };
 
@@ -15,6 +15,18 @@ export default function PostDetail({ postId, onBack, onRestaurantClick, activeUs
   } else if (activePage === 'perfil') {
     review.user = { name: 'Ana Silva', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&w=150&q=80' };
   }
+
+  // Is the logged-in user the author of this post?
+  const isOwnPost = (() => {
+    if (!currentUser) return false;
+    if (currentUser.type === 'restaurante') {
+      return review.restaurantId === currentUser.id;
+    }
+    // For clients: own post when viewing from their own profile or when no other user is selected
+    return activePage === 'perfil' || (!activeUser && currentUser.type === 'cliente');
+  })();
+
+  const mockViews = review.id * 317 + 412;
   const [liked, setLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(Math.floor(Math.random() * 50) + 5);
   const [showComments, setShowComments] = useState(true); // default open in detail
@@ -90,6 +102,11 @@ export default function PostDetail({ postId, onBack, onRestaurantClick, activeUs
               <Banknote size={14} />
               {review.spent}
             </div>
+            {isOwnPost && (
+              <div className="stat-badge" style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-muted)' }}>
+                <Eye size={13} /> {mockViews.toLocaleString('pt-BR')} visualizações
+              </div>
+            )}
           </div>
           
           {review.text && (

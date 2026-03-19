@@ -21,6 +21,7 @@ import AuthScreens from './components/AuthScreens';
 import InfluencerSearch from './pages/InfluencerSearch';
 import InfluencerOffers from './pages/InfluencerOffers';
 import RestaurantOffers from './pages/RestaurantOffers';
+import BuyTurbos from './pages/BuyTurbos';
 import { mockReservations } from './data/mockData';
 
 function App() {
@@ -46,6 +47,9 @@ function App() {
     }))
   );
   const [favoriteRestaurants, setFavoriteRestaurants] = useState([2, 3, 5]);
+  const [turboBalance, setTurboBalance] = useState(0);
+  // turbosActive: { [postId]: expiresAt (timestamp) }
+  const [turbosActive, setTurbosActive] = useState({});
 
   // Offers state
   const [offers, setOffers] = useState([
@@ -175,10 +179,20 @@ function App() {
       setActivePage('feed');
       setActiveTab('para_voce');
       setActiveRestaurant(null);
+      // Premium clients get 3 free turbos
+      if (userData.premium) setTurboBalance(3);
     } else if (userType === 'restaurante') {
       setActivePage('perfil');
       setActiveRestaurant(userData.id);
     }
+  };
+
+  const handleBoostPost = (postId) => {
+    if (turboBalance <= 0) return false;
+    const expiresAt = Date.now() + 24 * 60 * 60 * 1000; // 24h
+    setTurboBalance(prev => prev - 1);
+    setTurbosActive(prev => ({ ...prev, [postId]: expiresAt }));
+    return true;
   };
 
   const renderContent = () => {
@@ -198,6 +212,7 @@ function App() {
           onRestaurantClick={setActiveRestaurant}
           activeUser={activeUser}
           activePage={activePage}
+          currentUser={user}
         />
       );
     }
@@ -254,6 +269,10 @@ function App() {
       return <InfluencerOffers currentUser={user} offers={offers} onUpdateOffer={handleUpdateOffer} onRestaurantClick={setActiveRestaurant} />;
     }
 
+    if (activePage === 'turbos') {
+      return <BuyTurbos currentUser={user} turboBalance={turboBalance} setTurboBalance={setTurboBalance} />;
+    }
+
     if (activePage === 'comunidade') return <Comunidade onRestaurantClick={setActiveRestaurant} onGroupClick={setActiveGroup} />;
     
     if (activePage === 'perfil') {
@@ -270,7 +289,7 @@ function App() {
           />
         );
       }
-      return <MeuPerfil onRestaurantClick={setActiveRestaurant} onPostClick={setActivePost} favoriteRestaurants={favoriteRestaurants} />;
+      return <MeuPerfil onRestaurantClick={setActiveRestaurant} onPostClick={setActivePost} favoriteRestaurants={favoriteRestaurants} turboBalance={turboBalance} turbosActive={turbosActive} onBoostPost={handleBoostPost} onGoToTurbos={() => setActivePage('turbos')} />;
     }
 
     // Otherwise we are on the 'feed' page
@@ -303,7 +322,7 @@ function App() {
         }}
         onLogout={() => setUser(null)}
       />
-      <main className="main-content" style={(activePage === 'dashboard' || activePage === 'buscar_influencers' || activePage === 'gerenciar_parcerias' || activePage === 'parcerias' || (activePage === 'reservas' && user?.type === 'restaurante')) ? { maxWidth: 'none', padding: '20px 12px' } : {}}>
+      <main className="main-content" style={(activePage === 'dashboard' || activePage === 'turbos' || activePage === 'buscar_influencers' || activePage === 'gerenciar_parcerias' || activePage === 'parcerias' || (activePage === 'reservas' && user?.type === 'restaurante')) ? { maxWidth: 'none', padding: '20px 12px' } : {}}>
         {renderContent()}
       </main>
         <RightPanel

@@ -1,5 +1,5 @@
 import { mockRestaurants, mockReviews } from '../data/mockData';
-import { ArrowLeft, Star, MapPin, Map, Clock, MessageSquare, Heart, ShieldCheck, Search, ExternalLink, Smartphone, PenLine, Send } from 'lucide-react';
+import { ArrowLeft, Star, MapPin, Map, Clock, MessageSquare, Heart, ShieldCheck, Search, ExternalLink, Smartphone, PenLine, Send, Rocket, Eye } from 'lucide-react';
 import { useState } from 'react';
 import ReservationModal from '../components/ReservationModal';
 import ChatModal from '../components/ChatModal';
@@ -24,7 +24,8 @@ export default function RestaurantePerfil({ restaurantId, onBack, onOpenMenu, on
       comments: 18,
       commentsList: [],
       timeAgo: 'Há 2 dias',
-      isLiked: false
+      isLiked: false,
+      views: 1843
     },
     {
       id: 2,
@@ -34,7 +35,8 @@ export default function RestaurantePerfil({ restaurantId, onBack, onOpenMenu, on
       comments: 5,
       commentsList: [],
       timeAgo: 'Há 5 dias',
-      isLiked: false
+      isLiked: false,
+      views: 962
     }
   ]);
 
@@ -303,6 +305,19 @@ export default function RestaurantePerfil({ restaurantId, onBack, onOpenMenu, on
                 >
                   <MessageSquare size={18} /> {post.comments} Comentários
                 </button>
+                {isOwner && (
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '13px', color: 'var(--text-muted)', marginLeft: '4px' }}>
+                    <Eye size={15} /> {post.views?.toLocaleString('pt-BR') ?? 0} visualizações
+                  </span>
+                )}
+                {isOwner && (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); alert('Adquira um pacote de Turbos na aba lateral para aumentar o alcance desta publicação!'); }}
+                    style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '6px', background: 'linear-gradient(90deg, #f97316, #ea580c)', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '13px', fontWeight: 600, padding: '4px 14px', borderRadius: '16px' }}
+                  >
+                    <Rocket size={14} /> Turbinar Post
+                  </button>
+                )}
               </div>
               
               {post.commentsList && post.commentsList.length > 0 && (

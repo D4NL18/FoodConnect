@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Settings, MapPin, Heart, Star, Navigation, AlertTriangle } from 'lucide-react';
+import { Settings, MapPin, Heart, Star, Navigation, AlertTriangle, Rocket, Zap, Clock, X, Eye } from 'lucide-react';
 import { mockRestaurants, mockReviews, mockPeopleSearch } from '../data/mockData';
 import FollowersModal from '../components/FollowersModal';
 import EditProfileModal from '../components/EditProfileModal';
@@ -8,14 +8,39 @@ import FavoriteRestaurantsModal from '../components/FavoriteRestaurantsModal';
 import VisitedLocationsModal from '../components/VisitedLocationsModal';
 import UserReviewsModal from '../components/UserReviewsModal';
 
-export default function MeuPerfil({ onRestaurantClick, onPostClick, favoriteRestaurants = [2, 3, 5] }) {
+export default function MeuPerfil({ onRestaurantClick, onPostClick, favoriteRestaurants = [2, 3, 5], turboBalance = 0, turbosActive = {}, onBoostPost, onGoToTurbos }) {
   const [isFollowersModalOpen, setIsFollowersModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isFavoritesModalOpen, setIsFavoritesModalOpen] = useState(false);
   const [isListsModalOpen, setIsListsModalOpen] = useState(false);
   const [isVisitedModalOpen, setIsVisitedModalOpen] = useState(false);
   const [isReviewsModalOpen, setIsReviewsModalOpen] = useState(false);
+  const [turboConfirmPost, setTurboConfirmPost] = useState(null); // postId pendente de confirmação
   const currentUser = mockPeopleSearch.find(u => u.id === 201) || { followersCount: 12500, followersList: [] };
+
+  const getTimeRemaining = (postId) => {
+    const exp = turbosActive[postId];
+    if (!exp) return null;
+    const remaining = exp - Date.now();
+    if (remaining <= 0) return null;
+    const hours = Math.floor(remaining / (1000 * 60 * 60));
+    const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+    return hours > 0 ? `${hours}h restantes` : `${minutes}min restantes`;
+  };
+
+  const handleTurbinarPost = (postId) => {
+    if (turboBalance <= 0) {
+      if (onGoToTurbos) onGoToTurbos();
+      return;
+    }
+    if (turbosActive[postId] && turbosActive[postId] > Date.now()) return;
+    setTurboConfirmPost(postId);
+  };
+
+  const handleConfirmTurbo = () => {
+    if (onBoostPost && turboConfirmPost !== null) onBoostPost(turboConfirmPost);
+    setTurboConfirmPost(null);
+  };
 
   const [profileData, setProfileData] = useState({
     name: 'Ana Silva',
@@ -79,6 +104,14 @@ export default function MeuPerfil({ onRestaurantClick, onPostClick, favoriteRest
             <div style={{ fontSize: '13px', color: '#6b7280', fontWeight: 500, textDecoration: 'underline' }}>Seguidores</div>
           </div>
         </div>
+        {turboBalance > 0 && (
+          <div style={{ marginTop: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ background: 'linear-gradient(90deg,#f97316,#ea580c)', color: '#fff', padding: '4px 14px', borderRadius: '20px', fontSize: '13px', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+              <Zap size={14} fill="#fff" /> {turboBalance} Turbos disponíveis
+            </span>
+            <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Acesse seu perfil para turbinar avaliações</span>
+          </div>
+        )}
       </div>
 
       <div style={{ display: 'flex', gap: '24px', marginBottom: '32px' }}>
@@ -131,8 +164,32 @@ export default function MeuPerfil({ onRestaurantClick, onPostClick, favoriteRest
             <div className="review-stats" style={{ marginBottom: '8px' }}>
               <div className="stat-badge rating"><Star size={12} fill="currentColor" /> {review.rating.toFixed(1)}</div>
               <div className="stat-badge">Gasto: {review.spent}</div>
+              <div className="stat-badge" style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-muted)' }}>
+                <Eye size={12} /> {(review.id * 317 + 412).toLocaleString('pt-BR')} visualizações
+              </div>
             </div>
             <p style={{ fontSize: '14px' }}>{review.text}</p>
+            <div style={{ marginTop: '16px', borderTop: '1px solid var(--border-color)', paddingTop: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              {getTimeRemaining(review.id) ? (
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: '#f97316', fontWeight: 600 }}>
+                  <Rocket size={14} /> Turbinado • <Clock size={12} /> {getTimeRemaining(review.id)}
+                </span>
+              ) : <span />}
+              <button
+                className="btn-primary"
+                style={{
+                  background: getTimeRemaining(review.id) ? '#d1fae5' : 'linear-gradient(90deg, #f97316, #ea580c)',
+                  color: getTimeRemaining(review.id) ? '#065f46' : 'white',
+                  border: 'none', padding: '6px 16px', borderRadius: '16px', fontSize: '13px',
+                  display: 'flex', gap: '6px', alignItems: 'center', width: 'auto', margin: 0,
+                  cursor: getTimeRemaining(review.id) ? 'default' : 'pointer'
+                }}
+                onClick={(e) => { e.stopPropagation(); handleTurbinarPost(review.id); }}
+                disabled={!!getTimeRemaining(review.id)}
+              >
+                <Rocket size={16} /> {getTimeRemaining(review.id) ? 'Já Turbinado' : 'Turbinar'}
+              </button>
+            </div>
           </div>
         ))}
       </div>
@@ -171,6 +228,44 @@ export default function MeuPerfil({ onRestaurantClick, onPostClick, favoriteRest
         onReviewClick={onPostClick}
         userId={201}
       />
+
+      {/* Custom Turbo Confirm Modal */}
+      {turboConfirmPost !== null && (
+        <div className="modal-overlay" onClick={() => setTurboConfirmPost(null)}>
+          <div className="modal-content" style={{ maxWidth: '420px', padding: 0, overflow: 'hidden' }} onClick={e => e.stopPropagation()}>
+            <div style={{ background: 'linear-gradient(135deg, #f97316, #ea580c)', padding: '24px', textAlign: 'center' }}>
+              <Rocket size={40} color="#fff" style={{ marginBottom: '8px' }} />
+              <h2 style={{ color: '#fff', margin: 0, fontSize: '22px' }}>Turbinar Avaliação</h2>
+            </div>
+            <div style={{ padding: '28px 32px' }}>
+              <p style={{ fontSize: '15px', color: 'var(--text-primary)', lineHeight: 1.6, marginBottom: '16px' }}>
+                Ao turbinar, esta avaliação aparecerá com <strong>muito mais destaque</strong> nas abas <em>Para Você</em> e <em>Explorar</em> durante <strong>24 horas</strong>.
+              </p>
+              <div style={{ background: '#fff7ed', border: '1px solid #fed7aa', borderRadius: '12px', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '24px' }}>
+                <Zap size={20} color="#f97316" fill="#f97316" />
+                <div>
+                  <div style={{ fontWeight: 700, color: '#c2410c', fontSize: '14px' }}>Custo: 1 Turbo</div>
+                  <div style={{ fontSize: '12px', color: '#9a3412' }}>Saldo após uso: {turboBalance - 1} turbo(s)</div>
+                </div>
+              </div>
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <button
+                  onClick={() => setTurboConfirmPost(null)}
+                  style={{ flex: 1, padding: '12px', borderRadius: '10px', border: '1px solid var(--border-color)', background: '#fff', fontWeight: 600, fontSize: '15px', cursor: 'pointer', color: 'var(--text-secondary)' }}
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleConfirmTurbo}
+                  style={{ flex: 1, padding: '12px', borderRadius: '10px', border: 'none', background: 'linear-gradient(90deg, #f97316, #ea580c)', color: '#fff', fontWeight: 700, fontSize: '15px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+                >
+                  <Rocket size={18} /> Turbinar!
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
