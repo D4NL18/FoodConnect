@@ -1,6 +1,6 @@
-import { X, Trash2, Plus, ChevronLeft, Search } from 'lucide-react';
+import { X, Trash2, Plus, ChevronLeft, Search, Check, Send, User } from 'lucide-react';
 import { useState } from 'react';
-import { mockRestaurants } from '../data/mockData';
+import { mockRestaurants, mockPeopleSearch } from '../data/mockData';
 
 export default function FavoriteListsModal({ isOpen, onClose, isOwnProfile, initialLists }) {
   // lists -> { id, name, restaurants: [restaurantId] }
@@ -8,6 +8,9 @@ export default function FavoriteListsModal({ isOpen, onClose, isOwnProfile, init
   const [activeListId, setActiveListId] = useState(null);
   const [isAddingRestaurant, setIsAddingRestaurant] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [sharingList, setSharingList] = useState(null);
+  const [sendToUserSearch, setSendToUserSearch] = useState('');
+  const [successRecipient, setSuccessRecipient] = useState(null);
 
   if (!isOpen) return null;
 
@@ -48,9 +51,16 @@ export default function FavoriteListsModal({ isOpen, onClose, isOwnProfile, init
 
   const activeList = lists.find(list => list.id === activeListId);
   
+  const handleSendList = (user) => {
+    setSuccessRecipient(user.name);
+    setSharingList(null);
+    setTimeout(() => setSuccessRecipient(null), 2500);
+  };
+  
   const handleClose = () => {
     setIsAddingRestaurant(false);
     setSearchTerm('');
+    setSharingList(null);
     onClose();
   };
 
@@ -66,10 +76,12 @@ export default function FavoriteListsModal({ isOpen, onClose, isOwnProfile, init
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            {activeListId && (
+            {(activeListId || sharingList) && (
               <button 
                 onClick={() => {
-                  if (isAddingRestaurant) {
+                  if (sharingList) {
+                    setSharingList(null);
+                  } else if (isAddingRestaurant) {
                     setIsAddingRestaurant(false);
                     setSearchTerm('');
                   } else {
@@ -82,16 +94,23 @@ export default function FavoriteListsModal({ isOpen, onClose, isOwnProfile, init
               </button>
             )}
             <h2 style={{ fontSize: '18px', fontWeight: 600, margin: 0 }}>
-              {isAddingRestaurant ? 'Selecione um Restaurante' : (activeListId ? activeList.name : 'Listas de Favoritos')}
+              {sharingList ? 'Enviar Lista para...' : (isAddingRestaurant ? 'Selecione um Restaurante' : (activeListId ? activeList.name : 'Listas de Favoritos'))}
             </h2>
           </div>
-          <button onClick={handleClose} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px' }}>
-            <X size={20} />
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {activeListId && !isAddingRestaurant && !sharingList && (
+               <button onClick={() => setSharingList(activeList)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)', padding: '4px' }}>
+                  <Send size={18} />
+               </button>
+            )}
+            <button onClick={handleClose} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px' }}>
+              <X size={20} />
+            </button>
+          </div>
         </div>
 
         {/* MODO ROOT: Exibir todas as listas */}
-        {!activeListId && (
+        {!activeListId && !sharingList && (
           <>
             {isOwnProfile && (
               <button 
@@ -126,11 +145,16 @@ export default function FavoriteListsModal({ isOpen, onClose, isOwnProfile, init
                         {(list.restaurants || []).length} {(list.restaurants || []).length === 1 ? 'restaurante' : 'restaurantes'}
                       </div>
                     </div>
-                    {isOwnProfile && (
-                      <button onClick={(e) => handleDeleteList(list.id, e)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--accent-red)', padding: '8px' }}>
-                        <Trash2 size={18} />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <button onClick={(e) => { e.stopPropagation(); setSharingList(list); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)', padding: '8px' }}>
+                        <Send size={18} />
                       </button>
-                    )}
+                      {isOwnProfile && (
+                        <button onClick={(e) => handleDeleteList(list.id, e)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--accent-red)', padding: '8px' }}>
+                          <Trash2 size={18} />
+                        </button>
+                      )}
+                    </div>
                   </div>
                 ))
               )}
@@ -139,7 +163,7 @@ export default function FavoriteListsModal({ isOpen, onClose, isOwnProfile, init
         )}
 
         {/* MODO DETALHE DA LISTA */}
-        {activeListId && activeList && !isAddingRestaurant && (
+        {activeListId && activeList && !isAddingRestaurant && !sharingList && (
           <>
             {isOwnProfile && (
               <button 
@@ -182,7 +206,7 @@ export default function FavoriteListsModal({ isOpen, onClose, isOwnProfile, init
         )}
 
         {/* MODO ADICIONAR RESTAURANTE NA LISTA */}
-        {activeListId && activeList && isAddingRestaurant && (
+        {activeListId && activeList && isAddingRestaurant && !sharingList && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', flex: 1, minHeight: 0 }}>
             <div className="search-input-wrapper">
               <Search size={18} color="var(--text-muted)" />
@@ -199,23 +223,78 @@ export default function FavoriteListsModal({ isOpen, onClose, isOwnProfile, init
                 .filter(r => !(activeList.restaurants || []).includes(r.id))
                 .filter(r => r.name.toLowerCase().includes(searchTerm.toLowerCase()) || r.location.toLowerCase().includes(searchTerm.toLowerCase()))
                 .map(restaurant => (
-              <div key={restaurant.id} style={{ display: 'flex', alignItems: 'center', gap: '12px', background: '#f9fafb', padding: '8px', borderRadius: '8px' }}>
-                <img src={restaurant.image} alt={restaurant.name} style={{ width: '60px', height: '60px', borderRadius: '8px', objectFit: 'cover' }} />
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 600, fontSize: '15px' }}>{restaurant.name}</div>
-                  <div style={{ fontSize: '13px', color: '#6b7280' }}>{restaurant.location}</div>
-                </div>
-                {isOwnProfile && (
-                  <button onClick={() => handleAddRestaurantToList(activeList.id, restaurant.id)} style={{ background: 'var(--feed-active-bg)', border: 'none', cursor: 'pointer', color: 'var(--primary-orange)', padding: '8px', borderRadius: '8px' }}>
-                    <Plus size={18} />
-                  </button>
-                )}
-              </div>
-            ))}
+                  <div key={restaurant.id} style={{ display: 'flex', alignItems: 'center', gap: '12px', background: '#f9fafb', padding: '8px', borderRadius: '8px' }}>
+                    <img src={restaurant.image} alt={restaurant.name} style={{ width: '60px', height: '60px', borderRadius: '8px', objectFit: 'cover' }} />
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontWeight: 600, fontSize: '15px' }}>{restaurant.name}</div>
+                      <div style={{ fontSize: '13px', color: '#6b7280' }}>{restaurant.location}</div>
+                    </div>
+                    <button onClick={() => handleAddRestaurantToList(activeList.id, restaurant.id)} style={{ background: 'var(--feed-active-bg)', border: 'none', cursor: 'pointer', color: 'var(--primary-orange)', padding: '8px', borderRadius: '8px' }}>
+                      <Plus size={18} />
+                    </button>
+                  </div>
+                ))
+              }
             </div>
           </div>
         )}
+
+        {/* MODO ENVIAR PARA CHAT */}
+        {sharingList && (
+           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', flex: 1, minHeight: 0 }}>
+              <div className="search-input-wrapper">
+                <Search size={18} color="var(--text-muted)" />
+                <input 
+                  type="text" 
+                  placeholder="Enviar para..." 
+                  className="search-input"
+                  value={sendToUserSearch}
+                  onChange={(e) => setSendToUserSearch(e.target.value)}
+                />
+              </div>
+              <div style={{ overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {mockPeopleSearch
+                  .filter(u => u.name.toLowerCase().includes(sendToUserSearch.toLowerCase()))
+                  .map(user => (
+                    <div 
+                      key={user.id} 
+                      onClick={() => handleSendList(user)}
+                      style={{ 
+                        display: 'flex', alignItems: 'center', gap: '12px', 
+                        padding: '10px', background: '#f9fafb', borderRadius: '12px',
+                        cursor: 'pointer', transition: 'background 0.2s'
+                      }}
+                      onMouseEnter={e => e.currentTarget.style.background = '#f3f4f6'}
+                      onMouseLeave={e => e.currentTarget.style.background = '#f9fafb'}
+                    >
+                      <img src={user.avatar} style={{ width: '40px', height: '40px', borderRadius: '50%' }} />
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: '14px', fontWeight: 600 }}>{user.name}</div>
+                        <div style={{ fontSize: '12px', color: '#6b7280' }}>{user.handle}</div>
+                      </div>
+                      <Send size={16} color="var(--primary-orange)" />
+                    </div>
+                  ))
+                }
+              </div>
+           </div>
+        )}
       </div>
+
+      {/* Success Toast Notification */}
+      {successRecipient && (
+        <div style={{ 
+          position: 'fixed', bottom: '32px', left: '50%', transform: 'translateX(-50%)', 
+          background: '#111827', color: '#fff', padding: '12px 24px', borderRadius: '50px', 
+          display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px', fontWeight: 600, 
+          boxShadow: '0 10px 25px rgba(0,0,0,0.3)', zIndex: 2000, animation: 'slideUp 0.3s ease-out'
+        }}>
+          <Check size={18} color="#16a34a" /> Lista enviada para {successRecipient}!
+          <style>{`
+            @keyframes slideUp { from { transform: translate(-50%, 20px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+          `}</style>
+        </div>
+      )}
     </div>
   );
 }
