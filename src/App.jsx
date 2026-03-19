@@ -18,6 +18,9 @@ import GerenciarReservas from './pages/GerenciarReservas';
 import GroupDetail from './pages/GroupDetail';
 import Dashboard from './pages/Dashboard';
 import AuthScreens from './components/AuthScreens';
+import InfluencerSearch from './pages/InfluencerSearch';
+import InfluencerOffers from './pages/InfluencerOffers';
+import RestaurantOffers from './pages/RestaurantOffers';
 import { mockReservations } from './data/mockData';
 
 function App() {
@@ -43,6 +46,118 @@ function App() {
     }))
   );
   const [favoriteRestaurants, setFavoriteRestaurants] = useState([2, 3, 5]);
+
+  // Offers state
+  const [offers, setOffers] = useState([
+    {
+      id: 1,
+      restaurantId: 2,
+      restaurantName: 'Burger House - Pinheiros',
+      influencerId: 201,
+      influencerName: 'Ana Silva',
+      status: 'Pendente', 
+      posts: 2,
+      videos: 1,
+      value: 1500,
+      originalOffer: null
+    },
+    {
+      id: 2,
+      restaurantId: 1,
+      restaurantName: 'Oásis Veggie Gourmet',
+      influencerId: 211,
+      influencerName: 'Camila Freitas',
+      status: 'Pendente',
+      posts: 3,
+      videos: 2,
+      value: 2000,
+      originalOffer: null
+    },
+    {
+      id: 3,
+      restaurantId: 1,
+      restaurantName: 'Oásis Veggie Gourmet',
+      influencerId: 201,
+      influencerName: 'Ana Silva',
+      status: 'Contra-Proposta',
+      posts: 1,
+      videos: 2,
+      value: 2500,
+      originalOffer: {
+        posts: 2,
+        videos: 2,
+        value: 1800
+      }
+    },
+    {
+      id: 4,
+      restaurantId: 1,
+      restaurantName: 'Oásis Veggie Gourmet',
+      influencerId: 209,
+      influencerName: 'Beatriz Almeida',
+      status: 'Aceita',
+      posts: 1,
+      videos: 1,
+      value: 1000,
+      originalOffer: null
+    },
+    {
+      id: 5,
+      restaurantId: 3,
+      restaurantName: 'La Trattoria Bella',
+      influencerId: 201,
+      influencerName: 'Ana Silva',
+      status: 'Pendente',
+      posts: 4,
+      videos: 0,
+      value: 3000,
+      originalOffer: null
+    },
+    {
+      id: 6,
+      restaurantId: 1,
+      restaurantName: 'Oásis Veggie Gourmet',
+      influencerId: 206,
+      influencerName: 'Fernanda Lima',
+      status: 'Recusada',
+      posts: 3,
+      videos: 3,
+      value: 1200,
+      originalOffer: null
+    },
+    {
+      id: 7,
+      restaurantId: 4,
+      restaurantName: 'Sushi Lounge',
+      influencerId: 201,
+      influencerName: 'Ana Silva',
+      status: 'Aceita',
+      posts: 2,
+      videos: 1,
+      value: 1800,
+      originalOffer: null
+    },
+    {
+      id: 8,
+      restaurantId: 1,
+      restaurantName: 'Oásis Veggie Gourmet',
+      influencerId: 201,
+      influencerName: 'Ana Silva',
+      status: 'Recusada',
+      posts: 1,
+      videos: 0,
+      value: 800,
+      originalOffer: null
+    }
+  ]);
+
+  const handleCreateOffer = (offerData) => {
+    setOffers(prev => [...prev, { ...offerData, id: Date.now(), status: 'Pendente' }]);
+  };
+
+  const handleUpdateOffer = (id, newStatus, extraData = {}) => {
+    setOffers(prev => prev.map(offer => offer.id === id ? { ...offer, status: newStatus, ...extraData } : offer));
+  };
 
   const handleUpdateReservation = (id, newStatus, extraData = {}) => {
     setReservations(prev => prev.map(res => res.id === id ? { ...res, status: newStatus, ...extraData } : res));
@@ -127,6 +242,18 @@ function App() {
       return <Dashboard />;
     }
     
+    if (activePage === 'buscar_influencers' && user?.type === 'restaurante') {
+      return <InfluencerSearch currentUser={user} onCreateOffer={handleCreateOffer} onInfluencerClick={setActiveUser} offers={offers} />;
+    }
+
+    if (activePage === 'gerenciar_parcerias' && user?.type === 'restaurante') {
+      return <RestaurantOffers currentUser={user} offers={offers} onUpdateOffer={handleUpdateOffer} onInfluencerClick={setActiveUser} />;
+    }
+
+    if (activePage === 'parcerias' && user?.type === 'cliente' && user?.premium) {
+      return <InfluencerOffers currentUser={user} offers={offers} onUpdateOffer={handleUpdateOffer} onRestaurantClick={setActiveRestaurant} />;
+    }
+
     if (activePage === 'comunidade') return <Comunidade onRestaurantClick={setActiveRestaurant} onGroupClick={setActiveGroup} />;
     
     if (activePage === 'perfil') {
@@ -165,6 +292,7 @@ function App() {
       <Sidebar
         activePage={activePage}
         userType={user?.type}
+        currentUser={user}
         setActivePage={(page) => {
           setActivePage(page);
           setActiveRestaurant(null);
@@ -175,7 +303,7 @@ function App() {
         }}
         onLogout={() => setUser(null)}
       />
-      <main className="main-content" style={(activePage === 'dashboard' || (activePage === 'reservas' && user?.type === 'restaurante')) ? { maxWidth: 'none', padding: '20px 12px' } : {}}>
+      <main className="main-content" style={(activePage === 'dashboard' || activePage === 'buscar_influencers' || activePage === 'gerenciar_parcerias' || activePage === 'parcerias' || (activePage === 'reservas' && user?.type === 'restaurante')) ? { maxWidth: 'none', padding: '20px 12px' } : {}}>
         {renderContent()}
       </main>
         <RightPanel
@@ -184,6 +312,7 @@ function App() {
           currentUser={user}
           onRestaurantClick={setActiveRestaurant}
           onPostClick={setActivePost}
+          offers={offers}
         />
       </div>
       )}

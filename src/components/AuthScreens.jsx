@@ -50,7 +50,8 @@ const AuthScreens = ({ onLogin }) => {
   const handleLoginSubmit = (e) => {
     e.preventDefault();
     if (email === 'cliente@teste.com' && password === 'senha123') {
-      onLogin('cliente', { id: 100, name: 'Cliente Mock', email });
+      // Clientes premium têm acesso às funcionalidades de parcerias (influenciadores)
+      onLogin('cliente', { id: 201, name: 'Ana Silva', email, handle: '@anitta_s', premium: true, followersCount: 12500, tastes: ['Vegetariano', 'Vinhos', 'Doces Artesanais'] });
     } else if (email === 'restaurante@teste.com' && password === 'senha123') {
       onLogin('restaurante', { id: 1, name: 'Oásis Veggie Gourmet', email });
     } else {

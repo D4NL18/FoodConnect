@@ -1,8 +1,8 @@
-import { Home, Search, Users, User, PlusCircle, UserSearch, Calendar, LogOut, BarChart2, Star } from 'lucide-react';
+import { Home, Search, Users, User, PlusCircle, UserSearch, Calendar, LogOut, BarChart2, Star, Megaphone } from 'lucide-react';
 import { useState } from 'react';
 import CreatePostModal from './CreatePostModal';
 
-export default function Sidebar({ activePage, setActivePage, onLogout, userType }) {
+export default function Sidebar({ activePage, setActivePage, onLogout, userType, currentUser }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   let navItems = [
@@ -14,11 +14,17 @@ export default function Sidebar({ activePage, setActivePage, onLogout, userType 
     { id: 'perfil', label: 'Meu Perfil', icon: User },
   ];
 
+  if (userType === 'cliente' && currentUser?.premium) {
+    navItems.push({ id: 'parcerias', label: 'Parcerias', icon: Star, premium: true });
+  }
+
   if (userType === 'restaurante') {
     navItems = [
       { id: 'perfil', label: 'Meu Perfil', icon: User },
       { id: 'reservas', label: 'Minhas Reservas', icon: Calendar },
       { id: 'dashboard', label: 'Dashboard', icon: BarChart2, premium: true },
+      { id: 'buscar_influencers', label: 'Buscar Influencers', icon: Megaphone, premium: true },
+      { id: 'gerenciar_parcerias', label: 'Minhas Parcerias', icon: Star, premium: true },
     ];
   }
 

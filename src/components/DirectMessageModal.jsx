@@ -43,7 +43,7 @@ export default function DirectMessageModal({ isOpen, onClose, person, onRestaura
       <div className="modal-content" style={{ display: 'flex', flexDirection: 'column', height: '80vh', maxHeight: '600px' }}>
         <div className="modal-header" style={{ padding: '16px 24px', background: 'var(--primary-orange)', color: '#fff' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <img src={person.avatar} style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
+            <img src={person.avatar || person.image} style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
             <div>
               <h2 style={{ fontSize: '18px', fontWeight: 'bold', color: '#fff', margin: 0 }}>{person.name}</h2>
               <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.8)', margin: 0 }}>Online</p>
