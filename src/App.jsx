@@ -22,6 +22,7 @@ import InfluencerSearch from './pages/InfluencerSearch';
 import InfluencerOffers from './pages/InfluencerOffers';
 import RestaurantOffers from './pages/RestaurantOffers';
 import BuyTurbos from './pages/BuyTurbos';
+import Premium from './pages/Premium';
 import { mockReservations } from './data/mockData';
 
 function App() {
@@ -272,6 +273,10 @@ function App() {
     if (activePage === 'turbos') {
       return <BuyTurbos currentUser={user} turboBalance={turboBalance} setTurboBalance={setTurboBalance} />;
     }
+    
+    if (activePage === 'premium') {
+      return <Premium currentUser={user} />;
+    }
 
     if (activePage === 'comunidade') return <Comunidade onRestaurantClick={setActiveRestaurant} onGroupClick={setActiveGroup} />;
     
@@ -289,7 +294,7 @@ function App() {
           />
         );
       }
-      return <MeuPerfil onRestaurantClick={setActiveRestaurant} onPostClick={setActivePost} favoriteRestaurants={favoriteRestaurants} turboBalance={turboBalance} turbosActive={turbosActive} onBoostPost={handleBoostPost} onGoToTurbos={() => setActivePage('turbos')} />;
+      return <MeuPerfil onRestaurantClick={setActiveRestaurant} onPostClick={setActivePost} favoriteRestaurants={favoriteRestaurants} turboBalance={turboBalance} turbosActive={turbosActive} onBoostPost={handleBoostPost} onGoToTurbos={() => setActivePage('turbos')} premium={user?.premium} />;
     }
 
     // Otherwise we are on the 'feed' page
@@ -322,7 +327,7 @@ function App() {
         }}
         onLogout={() => setUser(null)}
       />
-      <main className="main-content" style={(activePage === 'dashboard' || activePage === 'turbos' || activePage === 'buscar_influencers' || activePage === 'gerenciar_parcerias' || activePage === 'parcerias' || (activePage === 'reservas' && user?.type === 'restaurante')) ? { maxWidth: 'none', padding: '20px 12px' } : {}}>
+      <main className="main-content" style={(activePage === 'dashboard' || activePage === 'turbos' || activePage === 'premium' || activePage === 'buscar_influencers' || activePage === 'gerenciar_parcerias' || activePage === 'parcerias' || (activePage === 'reservas' && user?.type === 'restaurante')) ? { maxWidth: 'none', padding: '20px 12px' } : {}}>
         {renderContent()}
       </main>
         <RightPanel

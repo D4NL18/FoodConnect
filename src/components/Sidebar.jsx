@@ -1,4 +1,4 @@
-import { Home, Search, Users, User, PlusCircle, UserSearch, Calendar, LogOut, BarChart2, Star, Megaphone, Rocket } from 'lucide-react';
+import { Home, Search, Users, User, PlusCircle, UserSearch, Calendar, LogOut, BarChart2, Star, Megaphone, Rocket, Crown } from 'lucide-react';
 import { useState } from 'react';
 import CreatePostModal from './CreatePostModal';
 
@@ -12,6 +12,7 @@ export default function Sidebar({ activePage, setActivePage, onLogout, userType,
     { id: 'comunidade', label: 'Comunidade', icon: Users },
     { id: 'reservas', label: 'Minhas Reservas', icon: Calendar },
     { id: 'perfil', label: 'Meu Perfil', icon: User },
+    { id: 'premium', label: 'Assinar Premium', icon: Crown },
     // Premium items last:
     { id: 'turbos', label: 'Turbinar Posts', icon: Rocket },
   ];
@@ -24,6 +25,7 @@ export default function Sidebar({ activePage, setActivePage, onLogout, userType,
     navItems = [
       { id: 'perfil', label: 'Meu Perfil', icon: User },
       { id: 'reservas', label: 'Minhas Reservas', icon: Calendar },
+      { id: 'premium', label: 'Premium', icon: Crown },
       // Premium items last:
       { id: 'turbos', label: 'Turbinar Posts', icon: Rocket },
       { id: 'dashboard', label: 'Dashboard', icon: BarChart2, premium: true },

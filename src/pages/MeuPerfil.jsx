@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Settings, MapPin, Heart, Star, Navigation, AlertTriangle, Rocket, Zap, Clock, X, Eye } from 'lucide-react';
+import { Settings, MapPin, Heart, Star, Navigation, AlertTriangle, Rocket, Zap, Clock, X, Eye, Crown } from 'lucide-react';
 import { mockRestaurants, mockReviews, mockPeopleSearch } from '../data/mockData';
 import FollowersModal from '../components/FollowersModal';
 import EditProfileModal from '../components/EditProfileModal';
@@ -8,7 +8,7 @@ import FavoriteRestaurantsModal from '../components/FavoriteRestaurantsModal';
 import VisitedLocationsModal from '../components/VisitedLocationsModal';
 import UserReviewsModal from '../components/UserReviewsModal';
 
-export default function MeuPerfil({ onRestaurantClick, onPostClick, favoriteRestaurants = [2, 3, 5], turboBalance = 0, turbosActive = {}, onBoostPost, onGoToTurbos }) {
+export default function MeuPerfil({ onRestaurantClick, onPostClick, favoriteRestaurants = [2, 3, 5], turboBalance = 0, turbosActive = {}, onBoostPost, onGoToTurbos, premium }) {
   const [isFollowersModalOpen, setIsFollowersModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isFavoritesModalOpen, setIsFavoritesModalOpen] = useState(false);
@@ -60,7 +60,11 @@ export default function MeuPerfil({ onRestaurantClick, onPostClick, favoriteRest
               style={{ width: '100px', height: '100px', borderRadius: '50%', objectFit: 'cover' }} 
             />
             <div>
-              <h1 style={{ fontSize: '24px', fontWeight: 700, margin: 0 }}>{profileData.name} <span style={{ fontSize: '16px', fontWeight: 400, color: 'var(--text-muted)' }}>(@anitta_s)</span></h1>
+              <h1 style={{ fontSize: '24px', fontWeight: 700, margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                {profileData.name} 
+                {premium && <Crown size={18} fill="#f59e0b" color="#f59e0b" style={{ filter: 'drop-shadow(0 0 2px rgba(245,158,11,0.3))' }} />}
+                <span style={{ fontSize: '16px', fontWeight: 400, color: 'var(--text-muted)' }}>(@anitta_s)</span>
+              </h1>
               <div style={{ color: '#6b7280', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '4px' }}>
                 <MapPin size={16} /> {profileData.location}
               </div>
@@ -109,7 +113,6 @@ export default function MeuPerfil({ onRestaurantClick, onPostClick, favoriteRest
             <span style={{ background: 'linear-gradient(90deg,#f97316,#ea580c)', color: '#fff', padding: '4px 14px', borderRadius: '20px', fontSize: '13px', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
               <Zap size={14} fill="#fff" /> {turboBalance} Turbos disponíveis
             </span>
-            <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Acesse seu perfil para turbinar avaliações</span>
           </div>
         )}
       </div>
