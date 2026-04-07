@@ -1,9 +1,10 @@
 import { Calendar, Clock, MapPin, Users, CheckCircle, XCircle, ChevronLeft, ChevronRight, Info, Search, Filter, Star } from 'lucide-react';
 import { useState } from 'react';
+import GerenciarFila from './GerenciarFila';
 
-export default function GerenciarReservas({ reservations, onUpdateReservation }) {
+export default function GerenciarReservas({ reservations, onUpdateReservation, queue, onQueueUpdate }) {
   const [weekOffset, setWeekOffset] = useState(0);
-  const [activeTab, setActiveTab] = useState('pendentes'); // pendentes, historico
+  const [activeTab, setActiveTab] = useState('pendentes'); // pendentes, historico, fila
   
   const [rejectingResId, setRejectingResId] = useState(null);
   const [proposedDate, setProposedDate] = useState('');
@@ -158,6 +159,13 @@ export default function GerenciarReservas({ reservations, onUpdateReservation })
       <div className="feed-tabs" style={{ marginBottom: '24px' }}>
         <button className={`tab ${activeTab === 'pendentes' ? 'active' : ''}`} onClick={() => setActiveTab('pendentes')}>Reservas Pendentes</button>
         <button className={`tab ${activeTab === 'historico' ? 'active' : ''}`} onClick={() => setActiveTab('historico')}>Histórico</button>
+        <button className={`tab ${activeTab === 'fila' ? 'active' : ''}`} onClick={() => setActiveTab('fila')}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+            {queue?.isOpen && <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#22c55e', display: 'inline-block', flexShrink: 0, animation: 'pulse 1.5s infinite' }} />}
+            Fila Virtual
+            {queue?.entries?.length > 0 && <span style={{ background: '#f97316', color: '#fff', borderRadius: '999px', padding: '1px 7px', fontSize: '11px', fontWeight: 700, flexShrink: 0 }}>{queue.entries.length}</span>}
+          </span>
+        </button>
       </div>
 
       {activeTab === 'pendentes' && (
@@ -283,6 +291,10 @@ export default function GerenciarReservas({ reservations, onUpdateReservation })
              <p style={{ textAlign: 'center', marginTop: '24px', color: 'var(--text-muted)' }}>Nenhuma reserva encontrada no histórico com esses filtros.</p>
           )}
         </div>
+      )}
+
+      {activeTab === 'fila' && queue && (
+        <GerenciarFila queue={queue} onQueueUpdate={onQueueUpdate} />
       )}
 
       {/* Modal de Recusa / Proposta */}

@@ -1,6 +1,19 @@
 import { Calendar, Clock, MapPin, Users, CheckCircle, XCircle } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import MinhaFila from './MinhaFila';
 
-export default function MinhasReservas({ reservations, onRestaurantClick, onUpdateReservation }) {
+export default function MinhasReservas({ reservations, onRestaurantClick, onUpdateReservation, currentUser, queue, onJoinQueue, onLeaveQueue, currentUserQueue, initialTab, onInitialTabConsumed }) {
+  const [activeTab, setActiveTab] = useState('reservas');
+
+  // Aplica a tab inicial de forma segura (após montar), e sinaliza que foi consumida
+  useEffect(() => {
+    if (initialTab && initialTab !== 'reservas') {
+      setActiveTab(initialTab);
+    }
+    onInitialTabConsumed?.();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // só na montagem
+
   const handleAcceptProposal = (res) => {
     onUpdateReservation(res.id, 'Proposta Aceita (Cliente)', { date: res.proposedDate || res.date, time: res.proposedTime });
   };
@@ -11,8 +24,33 @@ export default function MinhasReservas({ reservations, onRestaurantClick, onUpda
 
   return (
     <div className="card" style={{ padding: '24px' }}>
-      <h1 style={{ fontSize: '24px', fontWeight: 700, marginBottom: '24px' }}>Minhas Reservas</h1>
-      
+      <h1 style={{ fontSize: '24px', fontWeight: 700, marginBottom: '16px' }}>Minhas Reservas &amp; Fila</h1>
+
+      <div className="feed-tabs" style={{ marginBottom: '24px' }}>
+        <button className={`tab ${activeTab === 'reservas' ? 'active' : ''}`} onClick={() => setActiveTab('reservas')}>Reservas</button>
+        <button className={`tab ${activeTab === 'fila' ? 'active' : ''}`} onClick={() => setActiveTab('fila')}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+            {queue?.isOpen && <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#22c55e', display: 'inline-block', flexShrink: 0, animation: 'pulse 1.5s infinite' }} />}
+            Fila Virtual
+            {currentUserQueue && <span style={{ background: '#f97316', color: '#fff', borderRadius: '999px', padding: '1px 7px', fontSize: '11px', fontWeight: 700, flexShrink: 0 }}>#{queue?.entries?.findIndex(e => e.id === currentUserQueue?.id) + 1}</span>}
+          </span>
+        </button>
+      </div>
+
+      {activeTab === 'fila' && (
+        <MinhaFila
+          currentUserQueue={currentUserQueue}
+          queue={queue}
+          onJoinQueue={onJoinQueue}
+          onLeaveQueue={onLeaveQueue}
+          currentUser={currentUser}
+          restaurantName={currentUserQueue?.restaurantName || null}
+        />
+      )}
+
+      {activeTab === 'reservas' && (
+        <>
+
       {reservations.length === 0 ? (
         <div style={{ textAlign: 'center', color: '#6b7280', padding: '40px 0' }}>
           <Calendar size={48} style={{ margin: '0 auto 16px', opacity: 0.5 }} />
@@ -86,6 +124,8 @@ export default function MinhasReservas({ reservations, onRestaurantClick, onUpda
             );
           })}
         </div>
+      )}
+        </>
       )}
     </div>
   );

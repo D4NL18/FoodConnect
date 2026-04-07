@@ -47,6 +47,57 @@ function App() {
       proposedTime: i === 1 ? '20:30' : undefined
     }))
   );
+
+  // ── Fila Virtual ─────────────────────────────────────────────────────────
+  const [queue, setQueue] = useState({
+    isOpen: true,
+    entries: [
+      { id: 1001, name: 'Carlos Mendes',   partySize: 3, joinedAt: '19:32' },
+      { id: 1002, name: 'Aline Ferreira',  partySize: 2, joinedAt: '19:35' },
+      { id: 1003, name: 'Roberto Lima',    partySize: 4, joinedAt: '19:38' },
+      { id: 1004, name: 'Tatiane Ramos',   partySize: 1, joinedAt: '19:41' },
+      { id: 1005, name: 'Gustavo Pereira', partySize: 5, joinedAt: '19:44' },
+    ],
+    calledEntries: [], // grupos chamados aguardando confirmação de chegada
+    maxSize: 30,
+    autoCloseTime: null,
+    queueHistory: [14, 11, 13, 9, 16, 12, 10, 15, 11, 13, 8, 14, 12, 16, 10],
+  });
+  // Entrada do usuário cliente na fila (null se não está na fila)
+  const [currentUserQueue, setCurrentUserQueue] = useState(null);
+  // controla qual tab abre em MinhasReservas (para redirect pós-entrada na fila)
+  const [initialReservasTab, setInitialReservasTab] = useState('reservas');
+
+  const handleQueueUpdate = (patch) => {
+    setQueue(prev => ({ ...prev, ...patch }));
+  };
+
+  const handleJoinQueue = ({ partySize }) => {
+    const now = new Date();
+    const joinedAt = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+    const entry = { id: Date.now(), name: user?.name || 'Você', partySize, joinedAt };
+    setCurrentUserQueue(entry);
+    setQueue(prev => ({ ...prev, entries: [...prev.entries, entry] }));
+  };
+
+  const handleLeaveQueue = () => {
+    if (!currentUserQueue) return;
+    setQueue(prev => ({ ...prev, entries: prev.entries.filter(e => e.id !== currentUserQueue.id) }));
+    setCurrentUserQueue(null);
+  };
+
+  // Entra na fila a partir do perfil do restaurante e navega para Minhas Reservas → Fila
+  const handleJoinQueueAndNavigate = ({ partySize, restaurantId, restaurantName }) => {
+    const now = new Date();
+    const joinedAt = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+    const entry = { id: Date.now(), name: user?.name || 'Você', partySize, joinedAt, restaurantId, restaurantName };
+    setCurrentUserQueue(entry);
+    setQueue(prev => ({ ...prev, entries: [...prev.entries, entry] }));
+    setActiveRestaurant(null);
+    setInitialReservasTab('fila');
+    setActivePage('reservas');
+  };
+
   const [favoriteRestaurants, setFavoriteRestaurants] = useState([2, 3, 5]);
   const [turboBalance, setTurboBalance] = useState(0);
   // turbosActive: { [postId]: expiresAt (timestamp) }
@@ -218,8 +269,11 @@ function App() {
       );
     }
 
-    if (activeMenu && activeRestaurant && activeRestaurant !== user?.id) {
-      return <FullMenu restaurantId={activeRestaurant} onBack={() => setActiveMenu(false)} />;
+    if (activeMenu) {
+      const restId = activeRestaurant || (user?.type === 'restaurante' ? user.id : null);
+      if (restId) {
+        return <FullMenu restaurantId={restId} onBack={() => setActiveMenu(false)} />;
+      }
     }
 
     if (activeRestaurant && activeRestaurant !== user?.id) {
@@ -231,6 +285,9 @@ function App() {
         favoriteRestaurants={favoriteRestaurants}
         toggleFavorite={toggleFavoriteRestaurant}
         currentUser={user}
+        queue={user?.type === 'cliente' ? queue : null}
+        currentUserQueue={currentUserQueue}
+        onJoinQueueAndNavigate={user?.type === 'cliente' ? handleJoinQueueAndNavigate : null}
       />;
     }
 
@@ -250,9 +307,20 @@ function App() {
     
     if (activePage === 'reservas') {
       if (user?.type === 'restaurante') {
-        return <GerenciarReservas reservations={reservations} onUpdateReservation={handleUpdateReservation} />;
+        return <GerenciarReservas reservations={reservations} onUpdateReservation={handleUpdateReservation} queue={queue} onQueueUpdate={handleQueueUpdate} />;
       }
-      return <MinhasReservas reservations={reservations} onRestaurantClick={setActiveRestaurant} onUpdateReservation={handleUpdateReservation} currentUser={user} />;
+      return <MinhasReservas
+        reservations={reservations}
+        onRestaurantClick={setActiveRestaurant}
+        onUpdateReservation={handleUpdateReservation}
+        currentUser={user}
+        queue={queue}
+        onJoinQueue={handleJoinQueue}
+        onLeaveQueue={handleLeaveQueue}
+        currentUserQueue={currentUserQueue}
+        initialTab={initialReservasTab}
+        onInitialTabConsumed={() => setInitialReservasTab('reservas')}
+      />;
     }
     if (activePage === 'dashboard' && user?.type === 'restaurante') {
       return <Dashboard />;

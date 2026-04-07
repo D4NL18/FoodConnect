@@ -1,19 +1,28 @@
 import { mockRestaurants, mockReviews } from '../data/mockData';
-import { ArrowLeft, Star, MapPin, Map, Clock, MessageSquare, Heart, ShieldCheck, Search, ExternalLink, Smartphone, PenLine, Send, Rocket, Eye } from 'lucide-react';
+import { ArrowLeft, Star, MapPin, Map, Clock, MessageSquare, Heart, ShieldCheck, Search, ExternalLink, Smartphone, PenLine, Send, Rocket, Eye, UtensilsCrossed, Users, Zap, Brain } from 'lucide-react';
 import { useState } from 'react';
 import ReservationModal from '../components/ReservationModal';
 import ChatModal from '../components/ChatModal';
 import RestaurantPostModal from '../components/RestaurantPostModal';
+import EditRestaurantProfileModal from '../components/EditRestaurantProfileModal';
+import EditMenuModal from '../components/EditMenuModal';
 
-export default function RestaurantePerfil({ restaurantId, onBack, onOpenMenu, onReserve, favoriteRestaurants, toggleFavorite, currentUser }) {
+export default function RestaurantePerfil({ restaurantId, onBack, onOpenMenu, onReserve, favoriteRestaurants, toggleFavorite, currentUser, queue, currentUserQueue, onJoinQueueAndNavigate }) {
   const restaurant = mockRestaurants.find(r => r.id === restaurantId) || mockRestaurants[0];
   const [activeTab, setActiveTab] = useState('cardapio');
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isReservaOpen, setIsReservaOpen] = useState(false);
   const [reviewFilter, setReviewFilter] = useState('Todos');
   const [isPostOpen, setIsPostOpen] = useState(false);
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
+  const [isEditMenuOpen, setIsEditMenuOpen] = useState(false);
   const [commentingPost, setCommentingPost] = useState(null);
   const [commentText, setCommentText] = useState('');
+  const [queuePartySize, setQueuePartySize] = useState(2);
+  const [customPartyInputText, setCustomPartyInputText] = useState('8');
+  const [showCustomPartyInput, setShowCustomPartyInput] = useState(false);
+  const [isQueueModalOpen, setIsQueueModalOpen] = useState(false);
+  const [joiningQueue, setJoiningQueue] = useState(false);
 
   const [restaurantPosts, setRestaurantPosts] = useState([
     {
@@ -130,24 +139,59 @@ export default function RestaurantePerfil({ restaurantId, onBack, onOpenMenu, on
               </div>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', minWidth: '200px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', minWidth: '220px' }}>
               {isOwner ? (
-                <button 
-                  onClick={() => alert('Abrir modal de edição de perfil em breve')}
-                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '10px', borderRadius: '8px', border: '1px solid var(--border-color)', fontWeight: 600, color: 'var(--text-primary)', background: '#fff' }}
-                >
-                  <PenLine size={18} /> Editar Perfil
-                </button>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <button 
+                    onClick={() => setIsEditProfileOpen(true)}
+                    style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '10px', borderRadius: '8px', border: '1px solid var(--border-color)', fontWeight: 600, color: 'var(--text-primary)', background: '#fff', cursor: 'pointer' }}
+                  >
+                    <PenLine size={18} /> Editar Perfil
+                  </button>
+                  <button 
+                    onClick={() => setIsEditMenuOpen(true)}
+                    style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '10px', borderRadius: '8px', border: '1px solid var(--primary-orange)', fontWeight: 600, color: 'var(--primary-orange)', background: 'var(--feed-active-bg)', cursor: 'pointer' }}
+                  >
+                    <UtensilsCrossed size={18} /> Editar Cardápio
+                  </button>
+                </div>
               ) : !isRestaurantViewer ? (
                 <>
                   <button className="btn-primary" style={{ margin: 0, padding: '10px' }} onClick={() => setIsReservaOpen(true)}>Reservar Mesa</button>
-                  <button 
+
+                  {/* Botão de Entrar na Fila */}
+                  {queue && (
+                    currentUserQueue
+                      ? (
+                        // Já está na fila: mostra mini-status
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 14px', borderRadius: '8px', background: 'linear-gradient(135deg,#1e1b4b,#312e81)', color: '#fff' }}>
+                          <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#22c55e', animation: 'pulse 1.5s infinite', display: 'inline-block', flexShrink: 0 }} />
+                          <span style={{ fontWeight: 700, fontSize: '13px', flex: 1 }}>
+                            Na fila: #{(queue.entries?.findIndex(e => e.id === currentUserQueue.id) ?? 0) + 1}
+                          </span>
+                          <span style={{ fontSize: '12px', color: '#fde68a', fontWeight: 700 }}>
+                            ~{Math.ceil(Math.round(((queue.entries?.findIndex(e => e.id === currentUserQueue.id) ?? 0)) * (queue.queueHistory?.length ? Math.round(queue.queueHistory.reduce((a,b)=>a+b,0)/queue.queueHistory.length) : 12) * 0.6) / 5) * 5}min
+                          </span>
+                        </div>
+                      )
+                      : (
+                        <button
+                          onClick={() => setIsQueueModalOpen(true)}
+                          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '10px', borderRadius: '8px', fontWeight: 600, border: 'none', background: queue.isOpen ? 'linear-gradient(135deg,#6366f1,#4f46e5)' : '#e5e7eb', color: queue.isOpen ? '#fff' : '#9ca3af', cursor: queue.isOpen ? 'pointer' : 'default', width: '100%', transition: 'all .2s' }}
+                        >
+                          <Users size={18} />
+                          {queue.isOpen ? 'Entrar na Fila' : 'Fila Fechada'}
+                        </button>
+                      )
+                  )}
+
+                  <button
                     onClick={() => setIsChatOpen(true)}
                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '10px', borderRadius: '8px', border: '1px solid var(--border-color)', fontWeight: 600, color: 'var(--text-primary)' }}
                   >
                     <MessageSquare size={18} /> Chat do Local
                   </button>
-                  <button 
+                  <button
                     onClick={() => setIsPostOpen(true)}
                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '10px', borderRadius: '8px', border: '1px solid var(--primary-orange)', fontWeight: 600, color: 'var(--primary-orange)', background: 'var(--feed-active-bg)' }}
                   >
@@ -388,6 +432,184 @@ export default function RestaurantePerfil({ restaurantId, onBack, onOpenMenu, on
         onClose={() => setIsPostOpen(false)}
         restaurant={restaurant}
       />
+      <EditRestaurantProfileModal 
+        isOpen={isEditProfileOpen} 
+        onClose={() => setIsEditProfileOpen(false)} 
+        restaurantData={restaurant}
+        onSave={(data) => {
+          alert('Perfil salvo com sucesso!');
+          setIsEditProfileOpen(false);
+        }}
+      />
+      <EditMenuModal 
+        isOpen={isEditMenuOpen} 
+        onClose={() => setIsEditMenuOpen(false)} 
+        restaurantName={restaurant.name}
+      />
+
+      {/* ═══ MODAL: ENTRAR NA FILA ══════════════════════════════════════════ */}
+      {isQueueModalOpen && queue && (
+        <div
+          onClick={() => { setIsQueueModalOpen(false); setShowCustomPartyInput(false); setCustomPartyInputText('8'); }}
+          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.55)', zIndex: 1000, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', animation: 'fadeIn .2s ease' }}
+        >
+          <style>{`@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}} @keyframes fadeIn{from{opacity:0}to{opacity:1}}`}</style>
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{ background: '#fff', borderRadius: '24px 24px 0 0', padding: '28px 24px 36px', width: '100%', maxWidth: '520px', animation: 'slideUp .3s ease', boxShadow: '0 -8px 40px rgba(0,0,0,.15)' }}
+          >
+            {/* Handle */}
+            <div style={{ width: 40, height: 4, borderRadius: '99px', background: '#e5e7eb', margin: '0 auto 24px' }} />
+
+            {/* Header */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+              <div style={{ width: 44, height: 44, borderRadius: '12px', background: 'linear-gradient(135deg,#6366f1,#4f46e5)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <Users size={22} color="#fff" />
+              </div>
+              <div>
+                <h3 style={{ margin: 0, fontWeight: 800, fontSize: '18px' }}>Entrar na Fila</h3>
+                <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-muted)' }}>{restaurant.name}</p>
+              </div>
+            </div>
+
+            {/* Status + stats — reage ao tamanho do grupo selecionado */}
+            {(() => {
+              const avgMin = queue.queueHistory?.length
+                ? Math.round(queue.queueHistory.reduce((a,b)=>a+b,0)/queue.queueHistory.length) : 12;
+              const baseWait = queue.entries?.length > 0
+                ? Math.ceil(Math.round(queue.entries.length * avgMin * 0.6) / 5) * 5 : 0;
+              // Fator por tamanho de grupo: grupos maiores esperam mais
+              // (mesas grandes são escassas e demoram mais para liberar)
+              const sizeFactor =
+                queuePartySize <= 2 ? 1.0 :
+                queuePartySize <= 4 ? 1.2 :
+                queuePartySize <= 6 ? 1.5 : 1.8;
+              const adjustedWait = baseWait > 0 ? Math.ceil(Math.round(baseWait * sizeFactor) / 5) * 5 : 0;
+              return (
+                <div style={{ background: '#f9fafb', borderRadius: '16px', padding: '16px', marginBottom: '20px', display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#22c55e', display: 'inline-block', animation: 'pulse 1.5s infinite' }} />
+                    <span style={{ fontWeight: 700, fontSize: '14px', color: '#16a34a' }}>Fila Aberta</span>
+                  </div>
+                  <div style={{ display: 'flex', gap: '20px', marginLeft: 'auto', flexWrap: 'wrap' }}>
+                    <div style={{ textAlign: 'center' }}>
+                      <div style={{ fontSize: '22px', fontWeight: 900, color: '#6366f1' }}>{queue.entries?.length ?? 0}</div>
+                      <div style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600 }}>na fila</div>
+                    </div>
+                    {queuePartySize > 0 && (
+                      <div style={{ textAlign: 'center' }}>
+                        {adjustedWait > 0 ? (
+                          <>
+                            <div style={{ fontSize: '22px', fontWeight: 900, color: '#f59e0b', transition: 'all .3s' }}>~{adjustedWait}min</div>
+                            <div style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600 }}>
+                              para {queuePartySize}p
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <div style={{ fontSize: '18px', fontWeight: 900, color: '#16a34a' }}>Imediato</div>
+                            <div style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600 }}>sem espera</div>
+                          </>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* Party size */}
+            <div style={{ marginBottom: '24px' }}>
+              <p style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '12px' }}>QUANTAS PESSOAS NO SEU GRUPO?</p>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '10px', marginBottom: showCustomPartyInput ? '10px' : 0 }}>
+                {[1,2,3,4,5,6,7].map(n => (
+                  <button key={n} onClick={() => { setQueuePartySize(n); setShowCustomPartyInput(false); }} style={{
+                    padding: '14px 8px', borderRadius: '12px', fontWeight: queuePartySize === n && !showCustomPartyInput ? 800 : 600,
+                    border: queuePartySize === n && !showCustomPartyInput ? '2px solid var(--primary-orange)' : '1.5px solid #e5e7eb',
+                    background: queuePartySize === n && !showCustomPartyInput ? '#fff7ed' : '#fff',
+                    color: queuePartySize === n && !showCustomPartyInput ? 'var(--primary-orange)' : 'var(--text-primary)',
+                    cursor: 'pointer', fontSize: '16px', transition: 'all .15s',
+                    transform: queuePartySize === n && !showCustomPartyInput ? 'scale(1.04)' : 'scale(1)',
+                    boxShadow: queuePartySize === n && !showCustomPartyInput ? '0 4px 12px rgba(249,115,22,.2)' : 'none'
+                  }}>{n}</button>
+                ))}
+                {/* Botão 8+ */}
+                <button
+                  onClick={() => { 
+                    setShowCustomPartyInput(s => !s); 
+                    if (!showCustomPartyInput) {
+                      setQueuePartySize(parseInt(customPartyInputText, 10) || 0);
+                    } else {
+                      // fallback to preset if toggled off while empty
+                      if (queuePartySize === 0) setQueuePartySize(2);
+                    }
+                  }}
+                  style={{
+                    padding: '14px 8px', borderRadius: '12px', fontWeight: showCustomPartyInput ? 800 : 600,
+                    border: showCustomPartyInput ? '2px solid var(--primary-orange)' : '1.5px solid #e5e7eb',
+                    background: showCustomPartyInput ? '#fff7ed' : '#fff',
+                    color: showCustomPartyInput ? 'var(--primary-orange)' : 'var(--text-primary)',
+                    cursor: 'pointer', fontSize: '15px', transition: 'all .15s',
+                    transform: showCustomPartyInput ? 'scale(1.04)' : 'scale(1)',
+                    boxShadow: showCustomPartyInput ? '0 4px 12px rgba(249,115,22,.2)' : 'none'
+                  }}
+                >8+</button>
+              </div>
+              {showCustomPartyInput && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '4px' }}>
+                  <input
+                    type="number"
+                    min={1}
+                    max={99}
+                    value={customPartyInputText}
+                    onChange={e => {
+                      let val = e.target.value;
+                      // Limite de 2 dígitos:
+                      if (val.length > 2) val = val.slice(0, 2);
+                      setCustomPartyInputText(val);
+                      const parsed = parseInt(val, 10);
+                      setQueuePartySize(isNaN(parsed) ? 0 : parsed);
+                    }}
+                    autoFocus
+                    style={{
+                      flex: 1, height: 48, borderRadius: '12px',
+                      border: '2px solid var(--primary-orange)',
+                      padding: '0 16px', fontSize: '18px', fontWeight: 800,
+                      color: 'var(--primary-orange)', outline: 'none', textAlign: 'center'
+                    }}
+                  />
+                  <span style={{ fontSize: '13px', color: 'var(--text-muted)', fontWeight: 600, whiteSpace: 'nowrap' }}>pessoas</span>
+                </div>
+              )}
+            </div>
+
+            {/* Confirm */}
+            <button
+              onClick={() => {
+                if (!onJoinQueueAndNavigate) return;
+                setJoiningQueue(true);
+                setTimeout(() => {
+                  onJoinQueueAndNavigate({ partySize: queuePartySize, restaurantId, restaurantName: restaurant.name });
+                }, 600);
+              }}
+              disabled={joiningQueue || queuePartySize <= 0}
+              style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px',
+                width: '100%', padding: '16px', borderRadius: '14px', border: 'none',
+                background: joiningQueue || queuePartySize <= 0 ? '#e5e7eb' : 'linear-gradient(135deg,#f97316,#ea580c)',
+                color: joiningQueue || queuePartySize <= 0 ? '#9ca3af' : '#fff', fontWeight: 800, fontSize: '16px',
+                cursor: joiningQueue || queuePartySize <= 0 ? 'not-allowed' : 'pointer',
+                boxShadow: joiningQueue || queuePartySize <= 0 ? 'none' : '0 6px 20px rgba(249,115,22,.35)',
+                transition: 'all .2s'
+              }}
+            >
+              <Zap size={20} />
+              {joiningQueue ? 'Entrando na fila...' : 
+                queuePartySize > 0 ? `Confirmar — ${queuePartySize} pessoa${queuePartySize > 1 ? 's' : ''}` : 'Digite um valor válido'}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
