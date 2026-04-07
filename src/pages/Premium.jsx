@@ -59,7 +59,7 @@ export default function Premium({ currentUser }) {
           marginBottom: '24px'
         }}>
           <Crown size={24} color="#f59e0b" style={{ marginRight: '10px' }} />
-          <span style={{ color: '#f59e0b', fontWeight: 800, fontSize: '14px', textTransform: 'uppercase', letterSpacing: '2px' }}>FoodConnect Premium</span>
+          <span style={{ color: '#f59e0b', fontWeight: 800, fontSize: '14px', textTransform: 'uppercase', letterSpacing: '2px' }}>Gastronomy Premium</span>
         </div>
 
         <h1 style={{ fontSize: '42px', fontWeight: 900, marginBottom: '16px', lineHeight: 1.2 }}>
@@ -131,7 +131,7 @@ export default function Premium({ currentUser }) {
             
             <h2 style={{ fontSize: '24px', fontWeight: 800, marginBottom: '12px', color: '#111827' }}>Confirmar Assinatura</h2>
             <p style={{ color: '#6b7280', marginBottom: '32px', lineHeight: 1.6 }}>
-              Você está prestes a assinar o plano **FoodConnect Premium** por **R$ {price}/mês**. 
+              Você está prestes a assinar o plano **Gastronomy Premium** por **R$ {price}/mês**. 
               Todos os benefícios serão liberados instantaneamente na sua conta.
             </p>
 
@@ -213,7 +213,7 @@ export default function Premium({ currentUser }) {
             
             <h2 style={{ fontSize: '24px', fontWeight: 800, marginBottom: '12px', color: '#111827' }}>Parabéns!</h2>
             <p style={{ color: '#6b7280', marginBottom: '32px', lineHeight: 1.6 }}>
-              Sua assinatura foi realizada com sucesso! Aproveite todos os seus benefícios **FoodConnect Premium** agora mesmo.
+              Sua assinatura foi realizada com sucesso! Aproveite todos os seus benefícios **Gastronomy Premium** agora mesmo.
             </p>
 
             <button 
@@ -275,7 +275,7 @@ export default function Premium({ currentUser }) {
 
       {/* Social Proof / Trust Section */}
       <div style={{ background: '#f9731610', padding: '32px', borderRadius: '24px', border: '1px dashed #f9731630', textAlign: 'center' }}>
-        <h4 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--primary-orange)', marginBottom: '16px' }}>Junte-se à Elite do FoodConnect</h4>
+        <h4 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--primary-orange)', marginBottom: '16px' }}>Junte-se à Elite do Gastronomy</h4>
         <div style={{ display: 'flex', justifyContent: 'center', gap: '40px', flexWrap: 'wrap' }}>
           <div>
             <div style={{ fontSize: '24px', fontWeight: 900, color: 'var(--text-primary)' }}>{isRestaurant ? '12k+' : '45k+'}</div>

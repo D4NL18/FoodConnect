@@ -118,7 +118,7 @@ export default function Cursos() {
             <span style={{ fontSize: '14px', fontWeight: 800, color: '#fcd34d', letterSpacing: '1px', textTransform: 'uppercase' }}>Conteúdo Premium</span>
           </div>
           <h1 style={{ fontSize: '36px', fontWeight: 900, marginBottom: '16px', lineHeight: 1.2 }}>
-            Universidade FoodConnect
+            Universidade Gastronomy
           </h1>
           <p style={{ fontSize: '16px', color: '#c7d2fe', maxWidth: '600px', lineHeight: 1.6, marginBottom: '24px' }}>
             Eleve o nível do seu restaurante com cursos focados no mercado gastronômico. Aprenda com os maiores especialistas em gestão, marketing e culinária do Brasil.

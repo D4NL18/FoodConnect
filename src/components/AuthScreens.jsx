@@ -79,7 +79,7 @@ const AuthScreens = ({ onLogin }) => {
         <div className="auth-box">
           <div className="auth-logo">
             <UtensilsCrossed size={48} className="auth-icon" />
-            <h1>FoodConnect</h1>
+            <h1>Gastronomy</h1>
           </div>
           <h2>Bem-vindo de volta</h2>
           <p className="auth-subtitle">Conectando você aos melhores sabores</p>
