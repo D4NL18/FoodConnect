@@ -1,4 +1,4 @@
-import { Home, Search, Users, User, PlusCircle, UserSearch, Calendar, LogOut, BarChart2, Star, Megaphone, Rocket, Crown } from 'lucide-react';
+import { Home, Search, Users, User, PlusCircle, UserSearch, Calendar, LogOut, BarChart2, Star, Megaphone, Rocket, Crown, GraduationCap } from 'lucide-react';
 import { useState } from 'react';
 import CreatePostModal from './CreatePostModal';
 
@@ -28,6 +28,7 @@ export default function Sidebar({ activePage, setActivePage, onLogout, userType,
       { id: 'premium', label: 'Premium', icon: Crown },
       // Premium items last:
       { id: 'turbos', label: 'Turbinar Posts', icon: Rocket },
+      { id: 'cursos', label: 'Cursos', icon: GraduationCap, premium: true },
       { id: 'dashboard', label: 'Dashboard', icon: BarChart2, premium: true },
       { id: 'buscar_influencers', label: 'Buscar Influencers', icon: Megaphone, premium: true },
       { id: 'gerenciar_parcerias', label: 'Minhas Parcerias', icon: Star, premium: true },

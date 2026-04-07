@@ -23,6 +23,7 @@ import InfluencerOffers from './pages/InfluencerOffers';
 import RestaurantOffers from './pages/RestaurantOffers';
 import BuyTurbos from './pages/BuyTurbos';
 import Premium from './pages/Premium';
+import Cursos from './pages/Cursos';
 import { mockReservations } from './data/mockData';
 
 function App() {
@@ -326,6 +327,10 @@ function App() {
       return <Dashboard />;
     }
     
+    if (activePage === 'cursos' && user?.type === 'restaurante') {
+      return <Cursos />;
+    }
+    
     if (activePage === 'buscar_influencers' && user?.type === 'restaurante') {
       return <InfluencerSearch currentUser={user} onCreateOffer={handleCreateOffer} onInfluencerClick={setActiveUser} offers={offers} />;
     }
@@ -395,7 +400,7 @@ function App() {
         }}
         onLogout={() => setUser(null)}
       />
-      <main className="main-content" style={(activePage === 'dashboard' || activePage === 'turbos' || activePage === 'premium' || activePage === 'buscar_influencers' || activePage === 'gerenciar_parcerias' || activePage === 'parcerias' || (activePage === 'reservas' && user?.type === 'restaurante')) ? { maxWidth: 'none', padding: '20px 12px' } : {}}>
+      <main className="main-content" style={(activePage === 'cursos' || activePage === 'dashboard' || activePage === 'turbos' || activePage === 'premium' || activePage === 'buscar_influencers' || activePage === 'gerenciar_parcerias' || activePage === 'parcerias' || (activePage === 'reservas' && user?.type === 'restaurante')) ? { maxWidth: 'none', padding: '16px' } : {}}>
         {renderContent()}
       </main>
         <RightPanel
