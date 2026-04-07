@@ -37,11 +37,9 @@ export default function Sidebar({ activePage, setActivePage, onLogout, userType,
 
   return (
     <aside className="sidebar">
-      <div className="logo cursor-pointer" onClick={() => setActivePage('feed')}>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M11 2V12M11 12H8V2M11 12V22M8 12V22M16 2V12M16 12C16 14.2091 14.2091 16 12 16V22M16 12C17.7909 12 19.5 10.2091 19.5 8C19.5 5.79086 17.7909 4 16 4V2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-        Gastronomy
+      <div className="logo cursor-pointer" onClick={() => setActivePage('feed')} style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+        <img src="/logo.png" alt="Gastronomy Logo" style={{ height: '32px', width: 'auto', objectFit: 'contain', mixBlendMode: 'multiply', borderRadius: '50%' }} />
+        <span style={{ fontSize: '24px', fontWeight: 900 }}>Gastronomy</span>
       </div>
 
       <nav className="nav-menu" style={{ flex: 1 }}>

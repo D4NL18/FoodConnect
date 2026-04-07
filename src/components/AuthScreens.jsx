@@ -77,9 +77,9 @@ const AuthScreens = ({ onLogin }) => {
     return (
       <div className="auth-container">
         <div className="auth-box">
-          <div className="auth-logo">
-            <UtensilsCrossed size={48} className="auth-icon" />
-            <h1>Gastronomy</h1>
+          <div className="auth-logo" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px', marginBottom: '24px', flexDirection: 'row' }}>
+            <img src="/logo.png" alt="Gastronomy Logo" style={{ height: '64px', objectFit: 'contain', mixBlendMode: 'multiply', borderRadius: '50%' }} />
+            <h1 style={{ margin: 0, fontSize: '36px' }}>Gastronomy</h1>
           </div>
           <h2>Bem-vindo de volta</h2>
           <p className="auth-subtitle">Conectando você aos melhores sabores</p>
