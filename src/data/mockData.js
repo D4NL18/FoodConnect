@@ -3,6 +3,7 @@ export const mockRestaurants = [
     id: 1,
     name: 'Oásis Veggie Gourmet',
     handle: '@oasisveggiegourmet',
+    verified: true,
     location: 'Centro • Restaurante Vegano',
     image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     rating: 4.8,
@@ -17,6 +18,7 @@ export const mockRestaurants = [
     id: 2,
     name: 'Burger House - Pinheiros',
     handle: '@burgerhouse',
+    verified: true,
     location: 'Pinheiros • Hamburgueria',
     image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     rating: 5.0,
@@ -31,6 +33,7 @@ export const mockRestaurants = [
     id: 3,
     name: 'La Trattoria Bella',
     handle: '@latrattoriabella',
+    verified: true,
     location: 'Jardins • Italiana',
     image: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     rating: 4.9,
@@ -305,6 +308,7 @@ export const mockPeopleSearch = [
     id: 201,
     name: 'Ana Silva',
     handle: '@anitta_s',
+    verified: true,
     avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80',
     followersCount: 12500,
     isFamous: true,
@@ -344,6 +348,7 @@ export const mockPeopleSearch = [
     id: 203,
     name: 'Lucas Costa',
     handle: '@lucasc_99',
+    verified: true,
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80',
     followersCount: 89000,
     isFamous: true,
@@ -447,6 +452,7 @@ export const mockPeopleSearch = [
     id: 209,
     name: 'Beatriz Almeida',
     handle: '@bea.almeida',
+    verified: true,
     avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80',
     followersCount: 34200,
     isFamous: true,
@@ -500,6 +506,7 @@ export const mockPeopleSearch = [
     id: 212,
     name: 'Felipe Nobre',
     handle: '@felipecooks',
+    verified: true,
     avatar: 'https://images.unsplash.com/photo-1500048993953-d23a436266cf?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80',
     followersCount: 52000,
     isFamous: true,
@@ -588,6 +595,7 @@ export const mockReviews = [
     user: {
       name: 'Ana Silva',
       handle: '@anitta_s',
+      verified: true,
       avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80'
     },
     action: 'visitou e avaliou com',
@@ -636,6 +644,7 @@ export const mockReviews = [
     user: {
       name: 'Lucas Costa',
       handle: '@lucasc_99',
+      verified: true,
       avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80'
     },
     action: 'avaliou',
@@ -700,6 +709,7 @@ export const mockReviews = [
     user: {
       name: 'Beatriz Almeida',
       handle: '@bea.almeida',
+      verified: true,
       avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80'
     },
     action: 'avaliou',
@@ -748,6 +758,7 @@ export const mockReviews = [
     user: {
       name: 'Felipe Nobre',
       handle: '@felipecooks',
+      verified: true,
       avatar: 'https://images.unsplash.com/photo-1500048993953-d23a436266cf?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80'
     },
     action: 'avaliou',
@@ -828,6 +839,7 @@ export const mockReviews = [
     user: {
       name: 'Lucas Costa',
       handle: '@lucasc_99',
+      verified: true,
       avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80'
     },
     action: 'avaliou',

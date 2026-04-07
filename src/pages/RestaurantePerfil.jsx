@@ -1,5 +1,6 @@
 import { mockRestaurants, mockReviews } from '../data/mockData';
 import { ArrowLeft, Star, MapPin, Map, Clock, MessageSquare, Heart, ShieldCheck, Search, ExternalLink, Smartphone, PenLine, Send, Rocket, Eye, UtensilsCrossed, Users, Zap, Brain } from 'lucide-react';
+import VerifiedBadge from '../components/VerifiedBadge';
 import { useState } from 'react';
 import ReservationModal from '../components/ReservationModal';
 import ChatModal from '../components/ChatModal';
@@ -119,27 +120,31 @@ export default function RestaurantePerfil({ restaurantId, onBack, onOpenMenu, on
         </div>
 
         <div style={{ padding: '24px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
-            <div>
-              <div style={{ marginBottom: '8px' }}>
-                <h1 style={{ fontSize: '28px', fontWeight: 800, margin: 0 }}>{restaurant.name}</h1>
-                {restaurant.handle && <span style={{ fontSize: '15px', color: 'var(--text-muted)', fontWeight: 500 }}>{restaurant.handle}</span>}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '24px' }}>
+            <div style={{ flex: 1, minWidth: '300px' }}>
+              <div style={{ marginBottom: '12px' }}>
+                <h1 style={{ fontSize: '32px', fontWeight: 800, margin: 0, display: 'inline-block', verticalAlign: 'middle' }}>
+                  {restaurant.name}
+                  {restaurant.verified && <VerifiedBadge size={22} style={{ display: 'inline-block', verticalAlign: 'middle', marginLeft: '8px' }} />}
+                </h1>
+                {restaurant.handle && <div style={{ fontSize: '16px', color: 'var(--text-muted)', fontWeight: 500, marginTop: '4px' }}>{restaurant.handle}</div>}
               </div>
-              <div style={{ display: 'flex', gap: '12px', alignItems: 'center', color: '#6b7280', fontSize: '14px', marginBottom: '12px' }}>
-                <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--primary-orange)', fontWeight: 600 }}>
-                  <Star fill="currentColor" size={16} /> {restaurant.rating.toFixed(1)}
+              <div style={{ display: 'flex', gap: '16px', alignItems: 'center', color: '#4b5563', fontSize: '15px', marginBottom: '16px' }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--primary-orange)', fontWeight: 700 }}>
+                  <Star fill="currentColor" size={18} /> {restaurant.rating.toFixed(1)}
                 </span>
-                <span>•</span>
-                <span>{mockReviews.length * 43} Avaliações</span>
-                <span>•</span>
-                <span className="stat-badge">{restaurant.priceRange}</span>
+                <span style={{ color: '#d1d5db' }}>|</span>
+                <span style={{ fontWeight: 500 }}>{mockReviews.length * 43} Avaliações</span>
+                <span style={{ color: '#d1d5db' }}>|</span>
+                <span className="stat-badge" style={{ background: '#f3f4f6', color: '#374151', padding: '4px 10px', borderRadius: '6px', fontWeight: 600 }}>{restaurant.priceRange}</span>
               </div>
-              <div style={{ display: 'flex', gap: '8px', color: '#6b7280', fontSize: '14px' }}>
-                <MapPin size={16} /> {restaurant.location} - {restaurant.distance}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#6b7280', fontSize: '14px' }}>
+                <MapPin size={18} className="primary-color" /> 
+                <span style={{ fontWeight: 500 }}>{restaurant.location} • {restaurant.distance}</span>
               </div>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', minWidth: '220px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', minWidth: '200px' }}>
               {isOwner ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   <button 
@@ -193,7 +198,8 @@ export default function RestaurantePerfil({ restaurantId, onBack, onOpenMenu, on
                   </button>
                   <button
                     onClick={() => setIsPostOpen(true)}
-                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '10px', borderRadius: '8px', border: '1px solid var(--primary-orange)', fontWeight: 600, color: 'var(--primary-orange)', background: 'var(--feed-active-bg)' }}
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '10px', borderRadius: '8px', border: '1.5px solid var(--primary-orange)', fontWeight: 700, color: 'var(--primary-orange)', background: '#fff', transition: 'all 0.2s' }}
+                    className="hover-subtle"
                   >
                     <PenLine size={18} /> Criar Post
                   </button>

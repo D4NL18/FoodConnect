@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Search } from 'lucide-react';
 import { mockPeopleSearch } from '../data/mockData';
+import VerifiedBadge from '../components/VerifiedBadge';
 
 export default function BuscarPessoas({ onUserClick }) {
   const [searchQuery, setSearchQuery] = useState('');
@@ -66,7 +67,10 @@ export default function BuscarPessoas({ onUserClick }) {
                   background: '#f9fafb'
                 }}>
                 <img src={user.avatar} alt={user.name} style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', marginBottom: '12px' }} />
-                <div style={{ fontWeight: 600, fontSize: '15px', textAlign: 'center' }}>{user.name}</div>
+                <div style={{ fontWeight: 600, fontSize: '15px', textAlign: 'center' }}>
+                  {user.name}
+                  {user.verified && <VerifiedBadge size={14} />}
+                </div>
                 <div style={{ fontSize: '13px', color: '#6b7280', marginBottom: '8px' }}>{user.handle}</div>
                 <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--primary-orange)' }}>{user.followersCount.toLocaleString()} seguidores</div>
               </div>
@@ -99,7 +103,10 @@ export default function BuscarPessoas({ onUserClick }) {
                   }}>
                   <img src={user.avatar} alt={user.name} style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover' }} />
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: 600, fontSize: '15px' }}>{user.name}</div>
+                    <div style={{ fontWeight: 600, fontSize: '15px' }}>
+                      {user.name}
+                      {user.verified && <VerifiedBadge size={14} />}
+                    </div>
                     <div style={{ fontSize: '13px', color: '#6b7280' }}>{user.handle}</div>
                   </div>
                   <div>

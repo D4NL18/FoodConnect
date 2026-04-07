@@ -1,5 +1,6 @@
 import { Star, MessageCircle, Heart, Share2, Banknote, Send } from 'lucide-react';
 import { mockReviews, mockRestaurants } from '../data/mockData';
+import VerifiedBadge from '../components/VerifiedBadge';
 import { useState } from 'react';
 import ShareModal from '../components/ShareModal';
 
@@ -32,6 +33,7 @@ function ReviewPost({ review, onRestaurantClick, onShare }) {
         <div className="review-header-info">
           <div>
             <span className="review-author">{review.user.name}</span>{' '}
+            {review.user.verified && <VerifiedBadge size={14} />}
             {review.user.handle && <span style={{ color: 'var(--text-muted)', fontSize: '13px', fontWeight: 400 }}>({review.user.handle})</span>}{' '}
             <span className="review-action">{review.action}</span>
           </div>

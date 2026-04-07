@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { ArrowLeft, Heart, Navigation, Star } from 'lucide-react';
+import { ArrowLeft, UserPlus, MessageCircle, MapPin, Grid, Heart, Crown, Send } from 'lucide-react';
+import VerifiedBadge from '../components/VerifiedBadge';
 import { mockPeopleSearch, mockRestaurants, mockReviews } from '../data/mockData';
 import FollowersModal from '../components/FollowersModal';
 import FavoriteListsModal from '../components/FavoriteListsModal';
@@ -32,8 +33,12 @@ export default function UserProfile({ userId, onBack, onRestaurantClick, onPostC
               style={{ width: '100px', height: '100px', borderRadius: '50%', objectFit: 'cover' }} 
             />
             <div>
-              <h1 style={{ fontSize: '24px', fontWeight: 700, margin: 0 }}>{user.name} <span style={{ fontSize: '16px', fontWeight: 400, color: 'var(--text-muted)' }}>({user.handle})</span></h1>
-              <div style={{ fontSize: '14px', color: '#6b7280', marginBottom: '8px' }}>{user.tastes?.join(' · ')}</div>
+              <h1 style={{ fontSize: '32px', fontWeight: 800, margin: 0, display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                {user.name} 
+                {user.verified && <VerifiedBadge size={24} style={{ marginTop: '4px' }} />}
+              </h1>
+              <div style={{ fontSize: '18px', fontWeight: 500, color: 'var(--text-muted)', marginBottom: '4px' }}>{user.handle}</div>
+              <div style={{ fontSize: '14px', color: '#6b7280', marginBottom: '12px', fontWeight: 500 }}>{user.tastes?.join(' • ')}</div>
               <div style={{ display: 'flex', gap: '16px' }}>
                 <div 
                   style={{ cursor: 'pointer', textDecoration: 'underline' }} 
@@ -44,7 +49,22 @@ export default function UserProfile({ userId, onBack, onRestaurantClick, onPostC
               </div>
             </div>
           </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', minWidth: '180px' }}>
+            <button 
+              className="btn-primary" 
+              style={{ margin: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '10px 20px', borderRadius: '10px', fontSize: '15px', fontWeight: 700 }}
+            >
+              <UserPlus size={20} /> Seguir
+            </button>
+            <button 
+              style={{ margin: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '10px 20px', borderRadius: '10px', border: '1.5px solid var(--border-color)', background: '#fff', color: 'var(--text-primary)', fontSize: '15px', fontWeight: 600, cursor: 'pointer' }}
+            >
+              <Send size={18} /> Mensagem
+            </button>
+          </div>
         </div>
+        
         <div style={{ display: 'flex', gap: '24px', marginTop: '24px', paddingTop: '24px', borderTop: '1px solid #e5e7eb' }}>
           <div onClick={() => setIsVisitedModalOpen(true)} style={{ cursor: 'pointer' }}>
             <div style={{ fontSize: '24px', fontWeight: 700, color: 'var(--primary-orange)' }}>{Math.floor(Math.random() * 50) + 12}</div>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Star, Banknote, Heart, MessageCircle, Share2, Send } from 'lucide-react';
 import { mockRestaurants, mockReviews } from '../data/mockData';
+import VerifiedBadge from '../components/VerifiedBadge';
 import ShareModal from '../components/ShareModal';
 
 export default function FeedParaVoce({ onRestaurantClick }) {
@@ -38,6 +39,7 @@ export default function FeedParaVoce({ onRestaurantClick }) {
           <div className="card-content" style={{ paddingBottom: '16px' }}>
             <h2 className="highlight-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               {restaurant.name}
+              {restaurant.verified && <VerifiedBadge size={18} />}
               {restaurant.handle && <span style={{ fontSize: '14px', color: 'var(--text-muted)', fontWeight: 500 }}>{restaurant.handle}</span>}
             </h2>
             <p className="highlight-desc">{restaurant.highlightDesc}</p>
@@ -64,6 +66,7 @@ export default function FeedParaVoce({ onRestaurantClick }) {
           <div className="review-header-info">
             <div>
               <span className="review-author">{featuredReview.user.name}</span>{' '}
+              {featuredReview.user.verified && <VerifiedBadge size={14} />}
               {featuredReview.user.handle && (
                 <span style={{ color: 'var(--text-muted)', fontSize: '13px', fontWeight: 400 }}>({featuredReview.user.handle})</span>
               )}{' '}
