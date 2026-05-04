@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './AuthScreens.css';
-import { ChefHat, User, ArrowRight, UtensilsCrossed } from 'lucide-react';
+import { ChefHat, User, ArrowRight, ArrowLeft, UtensilsCrossed } from 'lucide-react';
 
 const AVAILABLE_FEATURES = [
   "Acessibilidade", "Ar Livre", "Benefício de Aniversário", 
@@ -17,8 +17,12 @@ const AVAILABLE_TASTES = [
   "Vegano", "Vegetariano", "Vinhos"
 ];
 
-const AuthScreens = ({ onLogin }) => {
-  const [view, setView] = useState('login'); // 'login', 'register-customer', 'register-restaurant'
+const AuthScreens = ({ onLogin, onBack, initialView = 'login' }) => {
+  const [view, setView] = useState(initialView); // 'login', 'register-customer', 'register-restaurant'
+  
+  useEffect(() => {
+    setView(initialView);
+  }, [initialView]);
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -76,6 +80,15 @@ const AuthScreens = ({ onLogin }) => {
   if (view === 'login') {
     return (
       <div className="auth-container">
+        {onBack && (
+          <button 
+            onClick={onBack} 
+            className="auth-btn-back"
+            style={{ position: 'absolute', top: '24px', left: '24px', display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)', background: 'white', padding: '8px 16px', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)', border: '1px solid var(--border-color)' }}
+          >
+            <ArrowLeft size={18} /> Voltar
+          </button>
+        )}
         <div className="auth-box">
           <div className="auth-logo" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px', marginBottom: '24px', flexDirection: 'row' }}>
             <img src="/logo.png" alt="Gastronomy Logo" style={{ height: '64px', objectFit: 'contain', mixBlendMode: 'multiply', borderRadius: '50%' }} />
@@ -131,6 +144,15 @@ const AuthScreens = ({ onLogin }) => {
   if (view === 'register-customer') {
     return (
       <div className="auth-container">
+        {onBack && (
+          <button 
+            onClick={onBack} 
+            className="auth-btn-back"
+            style={{ position: 'absolute', top: '24px', left: '24px', display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)', background: 'white', padding: '8px 16px', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)', border: '1px solid var(--border-color)' }}
+          >
+            <ArrowLeft size={18} /> Voltar
+          </button>
+        )}
         <div className="auth-box auth-box-large">
           <div className="auth-header">
             <h2>Criar Conta de Cliente</h2>
@@ -190,6 +212,15 @@ const AuthScreens = ({ onLogin }) => {
   if (view === 'register-restaurant') {
     return (
       <div className="auth-container">
+        {onBack && (
+          <button 
+            onClick={onBack} 
+            className="auth-btn-back"
+            style={{ position: 'absolute', top: '24px', left: '24px', display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)', background: 'white', padding: '8px 16px', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)', border: '1px solid var(--border-color)' }}
+          >
+            <ArrowLeft size={18} /> Voltar
+          </button>
+        )}
         <div className="auth-box auth-box-large">
           <div className="auth-header">
             <h2>Registrar Restaurante</h2>

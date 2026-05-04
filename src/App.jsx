@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import LandingPage from './pages/LandingPage';
 import Sidebar from './components/Sidebar';
 import RightPanel from './components/RightPanel';
 import FeedTabs from './components/FeedTabs';
@@ -28,7 +29,9 @@ import { mockReservations } from './data/mockData';
 
 function App() {
   const [user, setUser] = useState(null);
-  const [activePage, setActivePage] = useState('feed');
+  const [activePage, setActivePage] = useState('landing');
+  const [authInitialView, setAuthInitialView] = useState('login');
+  const [postLoginAction, setPostLoginAction] = useState(null);
   const [activeTab, setActiveTab] = useState('para_voce');
   const [activeRestaurant, setActiveRestaurant] = useState(null);
   const [activeMenu, setActiveMenu] = useState(false);
@@ -228,14 +231,22 @@ function App() {
 
   const handleLogin = (userType, userData) => {
     setUser({ type: userType, ...userData });
-    if (userType === 'cliente') {
+    
+    if (postLoginAction === 'premium') {
+      setActivePage('premium');
+      setPostLoginAction(null);
+    } else if (userType === 'cliente') {
       setActivePage('feed');
       setActiveTab('para_voce');
+    } else if (userType === 'restaurante') {
+      setActivePage('perfil');
+    }
+
+    if (userType === 'cliente') {
       setActiveRestaurant(null);
       // Premium clients get 3 free turbos
       if (userData.premium) setTurboBalance(3);
     } else if (userType === 'restaurante') {
-      setActivePage('perfil');
       setActiveRestaurant(userData.id);
     }
   };
@@ -381,9 +392,17 @@ function App() {
     );
   };
 
+  if (!user && activePage === 'landing') {
+    return <LandingPage onGoToAuth={(view = 'login', action = null) => {
+      setAuthInitialView(view);
+      setPostLoginAction(action);
+      setActivePage('auth');
+    }} />;
+  }
+
   return (
     <>
-      {!user && <AuthScreens onLogin={handleLogin} />}
+      {!user && activePage === 'auth' && <AuthScreens onLogin={handleLogin} onBack={() => setActivePage('landing')} initialView={authInitialView} />}
       {user && (
         <div className="app-container">
       <Sidebar
@@ -398,7 +417,10 @@ function App() {
           setActiveUser(null);
           setActiveGroup(null);
         }}
-        onLogout={() => setUser(null)}
+        onLogout={() => {
+          setUser(null);
+          setActivePage('landing');
+        }}
       />
       <main className="main-content" style={(activePage === 'cursos' || activePage === 'dashboard' || activePage === 'turbos' || activePage === 'premium' || activePage === 'buscar_influencers' || activePage === 'gerenciar_parcerias' || activePage === 'parcerias' || (activePage === 'reservas' && user?.type === 'restaurante')) ? { maxWidth: 'none', padding: '16px' } : {}}>
         {renderContent()}
