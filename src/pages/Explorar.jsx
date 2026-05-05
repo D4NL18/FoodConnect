@@ -67,7 +67,13 @@ export default function Explorar({ onRestaurantClick }) {
       featMatches = activeFilters.features.some(feat => r.features?.includes(feat));
     }
 
-    return matchesSearch && matchesRating && matchesDistance && priceMatches && catMatches && featMatches;
+    // 6. Michelin Parse
+    let michelinMatches = true;
+    if (activeFilters.michelinOnly) {
+      michelinMatches = r.awards && r.awards.some(a => a.type.startsWith('michelin'));
+    }
+
+    return matchesSearch && matchesRating && matchesDistance && priceMatches && catMatches && featMatches && michelinMatches;
   });
 
   return (

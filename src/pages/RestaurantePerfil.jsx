@@ -1,5 +1,5 @@
 import { mockRestaurants, mockReviews } from '../data/mockData';
-import { ArrowLeft, Star, MapPin, Map, Clock, MessageSquare, Heart, ShieldCheck, Search, ExternalLink, Smartphone, PenLine, Send, Rocket, Eye, UtensilsCrossed, Users, Zap, Brain } from 'lucide-react';
+import { ArrowLeft, Star, MapPin, Map, Clock, MessageSquare, Heart, ShieldCheck, Search, ExternalLink, Smartphone, PenLine, Send, Rocket, Eye, UtensilsCrossed, Users, Zap, Brain, Award, CheckCircle } from 'lucide-react';
 import VerifiedBadge from '../components/VerifiedBadge';
 import { useState } from 'react';
 import ReservationModal from '../components/ReservationModal';
@@ -24,6 +24,7 @@ export default function RestaurantePerfil({ restaurantId, onBack, onOpenMenu, on
   const [showCustomPartyInput, setShowCustomPartyInput] = useState(false);
   const [isQueueModalOpen, setIsQueueModalOpen] = useState(false);
   const [joiningQueue, setJoiningQueue] = useState(false);
+  const [profileSaveSuccess, setProfileSaveSuccess] = useState(false);
 
   const [restaurantPosts, setRestaurantPosts] = useState([
     {
@@ -127,7 +128,41 @@ export default function RestaurantePerfil({ restaurantId, onBack, onOpenMenu, on
                   {restaurant.name}
                   {restaurant.verified && <VerifiedBadge size={22} style={{ display: 'inline-block', verticalAlign: 'middle', marginLeft: '8px' }} />}
                 </h1>
-                {restaurant.handle && <div style={{ fontSize: '16px', color: 'var(--text-muted)', fontWeight: 500, marginTop: '4px' }}>{restaurant.handle}</div>}
+                
+                {/* Michelin Badges */}
+                {restaurant.awards && restaurant.awards.length > 0 && (
+                  <div style={{ display: 'flex', gap: '8px', marginTop: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+                    {restaurant.awards.filter(a => a.type.startsWith('michelin')).map(award => {
+                      if (award.type === 'michelin-star') {
+                        return (
+                          <div key={award.id} style={{ display: 'flex', alignItems: 'center', gap: '2px', background: '#da291c', color: 'white', padding: '4px 8px', borderRadius: '4px', fontSize: '13px', fontWeight: 800, boxShadow: '0 2px 4px rgba(218,41,28,0.3)' }}>
+                            {Array.from({ length: award.value || 1 }).map((_, i) => <Star key={i} size={14} fill="currentColor" strokeWidth={0} style={{ transform: 'scale(1.1)' }} />)}
+                            <span style={{ marginLeft: '4px' }}>MICHELIN {award.year}</span>
+                          </div>
+                        );
+                      }
+                      if (award.type === 'michelin-green') {
+                        return (
+                          <div key={award.id} style={{ display: 'flex', alignItems: 'center', gap: '4px', background: '#22c55e', color: 'white', padding: '4px 8px', borderRadius: '4px', fontSize: '13px', fontWeight: 800, boxShadow: '0 2px 4px rgba(34,197,94,0.3)' }}>
+                            <Star size={14} fill="currentColor" strokeWidth={0} style={{ transform: 'scale(1.1)' }} />
+                            <span>ESTRELA VERDE {award.year}</span>
+                          </div>
+                        );
+                      }
+                      if (award.type === 'michelin-bib') {
+                        return (
+                          <div key={award.id} style={{ display: 'flex', alignItems: 'center', gap: '4px', background: '#da291c', color: 'white', padding: '4px 8px', borderRadius: '4px', fontSize: '13px', fontWeight: 800, boxShadow: '0 2px 4px rgba(218,41,28,0.3)' }}>
+                            <Award size={14} />
+                            <span>Bib Gourmand {award.year}</span>
+                          </div>
+                        );
+                      }
+                      return null;
+                    })}
+                  </div>
+                )}
+                
+                {restaurant.handle && <div style={{ fontSize: '16px', color: 'var(--text-muted)', fontWeight: 500, marginTop: '8px' }}>{restaurant.handle}</div>}
               </div>
               <div style={{ display: 'flex', gap: '16px', alignItems: 'center', color: '#4b5563', fontSize: '15px', marginBottom: '16px' }}>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--primary-orange)', fontWeight: 700 }}>
@@ -412,17 +447,48 @@ export default function RestaurantePerfil({ restaurantId, onBack, onOpenMenu, on
       )}
 
       {activeTab === 'info' && (
-        <div className="card" style={{ padding: '24px' }}>
-          <h2 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '16px' }}>Localização e Horários</h2>
-          <div style={{ background: '#f3f4f6', height: '150px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px', color: 'var(--text-muted)' }}>
-            <Map size={32} /> <span style={{ marginLeft: '8px' }}>Mapa Interativo aqui</span>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div className="card" style={{ padding: '24px' }}>
+            <h2 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '16px' }}>Localização e Horários</h2>
+            <div style={{ background: '#f3f4f6', height: '150px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px', color: 'var(--text-muted)' }}>
+              <Map size={32} /> <span style={{ marginLeft: '8px' }}>Mapa Interativo aqui</span>
+            </div>
+            <p style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px', fontSize: '14px' }}>
+              <MapPin size={18} color="var(--primary-orange)" /> Av. Faria Lima, 1234 - Pinheiros, São Paulo
+            </p>
+            <p style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px' }}>
+              <Clock size={18} color="var(--primary-orange)" /> Aberto Hoje: 11:30 - 23:00
+            </p>
           </div>
-          <p style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px', fontSize: '14px' }}>
-            <MapPin size={18} color="var(--primary-orange)" /> Av. Faria Lima, 1234 - Pinheiros, São Paulo
-          </p>
-          <p style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px' }}>
-            <Clock size={18} color="var(--primary-orange)" /> Aberto Hoje: 11:30 - 23:00
-          </p>
+
+          {/* Seção de Premiações */}
+          {restaurant.awards && restaurant.awards.length > 0 && (
+            <div className="card" style={{ padding: '24px' }}>
+              <h2 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Award size={20} color="var(--primary-orange)" /> Premiações e Reconhecimentos
+              </h2>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {restaurant.awards.map(award => (
+                  <div key={award.id} style={{ display: 'flex', gap: '16px', alignItems: 'flex-start', padding: '16px', background: award.type.startsWith('michelin') ? '#fff1f1' : '#f9fafb', borderRadius: '12px', border: award.type.startsWith('michelin') ? '1px solid #fee2e2' : '1px solid var(--border-color)' }}>
+                    <div style={{ 
+                      width: '48px', height: '48px', borderRadius: '12px', flexShrink: 0,
+                      background: award.type === 'michelin-star' || award.type === 'michelin-bib' ? '#da291c' : award.type === 'michelin-green' ? '#22c55e' : '#f59e0b',
+                      color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                    }}>
+                      {award.type.includes('star') || award.type.includes('green') ? <Star fill="currentColor" strokeWidth={0} size={24} /> : <Award size={24} />}
+                    </div>
+                    <div>
+                      <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#111827', margin: '0 0 4px' }}>
+                        {award.name} {award.year && <span style={{ color: 'var(--text-muted)', fontWeight: 600 }}>• {award.year}</span>}
+                      </h3>
+                      <p style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: '0 0 8px', fontWeight: 600 }}>{award.organization}</p>
+                      {award.description && <p style={{ fontSize: '14px', color: '#4b5563', margin: 0, lineHeight: 1.5 }}>{award.description}</p>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -443,8 +509,9 @@ export default function RestaurantePerfil({ restaurantId, onBack, onOpenMenu, on
         onClose={() => setIsEditProfileOpen(false)} 
         restaurantData={restaurant}
         onSave={(data) => {
-          alert('Perfil salvo com sucesso!');
           setIsEditProfileOpen(false);
+          setProfileSaveSuccess(true);
+          setTimeout(() => setProfileSaveSuccess(false), 3000);
         }}
       />
       <EditMenuModal 
@@ -614,6 +681,24 @@ export default function RestaurantePerfil({ restaurantId, onBack, onOpenMenu, on
                 queuePartySize > 0 ? `Confirmar — ${queuePartySize} pessoa${queuePartySize > 1 ? 's' : ''}` : 'Digite um valor válido'}
             </button>
           </div>
+        </div>
+      )}
+
+      {profileSaveSuccess && (
+        <div style={{
+          position: 'fixed', bottom: '40px', left: '50%', transform: 'translateX(-50%)',
+          background: '#10b981', color: 'white', padding: '16px 24px', borderRadius: '30px',
+          display: 'flex', alignItems: 'center', gap: '12px', fontWeight: 600, fontSize: '15px',
+          boxShadow: '0 10px 30px rgba(16,185,129,0.3)', zIndex: 1100,
+          animation: 'fadeInUp 0.3s ease-out'
+        }}>
+          <CheckCircle size={20} /> Perfil salvo com sucesso!
+          <style>{`
+            @keyframes fadeInUp {
+              from { opacity: 0; transform: translate(-50%, 20px); }
+              to { opacity: 1; transform: translate(-50%, 0); }
+            }
+          `}</style>
         </div>
       )}
     </div>

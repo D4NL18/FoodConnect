@@ -6,6 +6,7 @@ export default function FilterModal({ isOpen, onClose, onApply }) {
   const [minRating, setMinRating] = useState(4);
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(300); // 300 = ilimitado no slider
+  const [michelinOnly, setMichelinOnly] = useState(false);
   
   const [categories, setCategories] = useState({
     'Italiana': false,
@@ -41,7 +42,8 @@ export default function FilterModal({ isOpen, onClose, onApply }) {
       minPrice,
       maxPrice,
       categories: activeCategories,
-      features: activeFeatures
+      features: activeFeatures,
+      michelinOnly
     });
     onClose();
   };
@@ -51,6 +53,7 @@ export default function FilterModal({ isOpen, onClose, onApply }) {
     setMinRating(4);
     setMinPrice(0);
     setMaxPrice(300);
+    setMichelinOnly(false);
     setCategories(Object.keys(categories).reduce((acc, cat) => ({...acc, [cat]: false}), {}));
     setFeatures(Object.keys(features).reduce((acc, feat) => ({...acc, [feat]: false}), {}));
     onApply(null);
@@ -200,6 +203,24 @@ export default function FilterModal({ isOpen, onClose, onApply }) {
                 </button>
               ))}
             </div>
+          </div>
+          
+          {/* Premiações (Michelin) */}
+          <div>
+            <label style={{ fontWeight: 600, fontSize: '15px', display: 'block', marginBottom: '12px' }}>Premiações Especiais</label>
+            <button
+              onClick={() => setMichelinOnly(!michelinOnly)}
+              style={{
+                padding: '12px 20px', borderRadius: '12px', cursor: 'pointer', fontWeight: 700, fontSize: '15px',
+                border: michelinOnly ? '1px solid #da291c' : '1px solid var(--border-color)',
+                background: michelinOnly ? '#fff1f1' : '#fff',
+                color: michelinOnly ? '#da291c' : '#4b5563',
+                transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: '8px', width: '100%', justifyContent: 'center'
+              }}
+            >
+              <Star size={18} fill={michelinOnly ? '#da291c' : 'transparent'} stroke={michelinOnly ? '#da291c' : 'currentColor'} /> 
+              Apenas Recomendados pelo Guia Michelin
+            </button>
           </div>
           
         </div>

@@ -12,7 +12,11 @@ export const mockRestaurants = [
     status: 'Vazio',
     highlightReason: 'Porque gosta de comida vegana',
     highlightDesc: 'A IA detectou que este restaurante tem o prato "Bowl de Quinoa" mais elogiado por utilizadores com perfil semelhante ao seu.',
-    features: ['Pet Friendly', 'Vegano', 'Ar Livre']
+    features: ['Pet Friendly', 'Vegano', 'Ar Livre'],
+    awards: [
+      { id: 101, type: 'michelin-green', value: 1, year: '2024', name: 'Estrela Verde Michelin', organization: 'Guia Michelin', description: 'Gastronomia e Sustentabilidade.' },
+      { id: 102, type: 'standard', name: 'Melhor Restaurante Vegano', year: '2023', organization: 'Veja Comer & Beber', description: 'Prêmio de melhor escolha sustentável e vegana.' }
+    ]
   },
   {
     id: 2,
@@ -42,7 +46,10 @@ export const mockRestaurants = [
     status: 'Reserva Necessária',
     highlightReason: 'Excelente para Casais',
     highlightDesc: 'Massa fresca artesanal e a melhor carta de vinhos tintos da zona sul.',
-    features: ['Estacionamento', 'Carta de Vinhos', 'Música ao Vivo']
+    features: ['Estacionamento', 'Carta de Vinhos', 'Música ao Vivo'],
+    awards: [
+      { id: 3, type: 'michelin-bib', value: 1, year: '2024', name: 'Bib Gourmand', organization: 'Guia Michelin', description: 'Excelente custo-benefício.' }
+    ]
   },
   {
     id: 4,
@@ -126,7 +133,11 @@ export const mockRestaurants = [
     status: 'Reserva Necessária',
     highlightReason: 'Indicado pelo Guia Michelin',
     highlightDesc: 'Alta gastronomia com vista para o parque. Chef premiado pela terceira vez consecutiva.',
-    features: ['Carta de Vinhos', 'Estacionamento', 'Acessibilidade']
+    features: ['Carta de Vinhos', 'Estacionamento', 'Acessibilidade'],
+    awards: [
+      { id: 1, type: 'michelin-star', value: 2, year: '2025', name: 'Duas Estrelas Michelin', organization: 'Guia Michelin', description: 'Cozinha excelente, vale o desvio.' },
+      { id: 2, type: 'michelin-green', value: 1, year: '2025', name: 'Estrela Verde Michelin', organization: 'Guia Michelin', description: 'Gastronomia e Sustentabilidade.' }
+    ]
   },
   {
     id: 10,
