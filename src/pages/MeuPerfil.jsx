@@ -8,7 +8,7 @@ import FavoriteRestaurantsModal from '../components/FavoriteRestaurantsModal';
 import VisitedLocationsModal from '../components/VisitedLocationsModal';
 import UserReviewsModal from '../components/UserReviewsModal';
 
-export default function MeuPerfil({ onRestaurantClick, onPostClick, favoriteRestaurants = [2, 3, 5], turboBalance = 0, turbosActive = {}, onBoostPost, onGoToTurbos, premium }) {
+export default function MeuPerfil({ onRestaurantClick, onPostClick, favoriteRestaurants = [2, 3, 5], turboBalance = 0, turbosActive = {}, onBoostPost, onGoToTurbos, premium, currentUser: appUser }) {
   const [isFollowersModalOpen, setIsFollowersModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isFavoritesModalOpen, setIsFavoritesModalOpen] = useState(false);
@@ -16,7 +16,9 @@ export default function MeuPerfil({ onRestaurantClick, onPostClick, favoriteRest
   const [isVisitedModalOpen, setIsVisitedModalOpen] = useState(false);
   const [isReviewsModalOpen, setIsReviewsModalOpen] = useState(false);
   const [turboConfirmPost, setTurboConfirmPost] = useState(null); // postId pendente de confirmação
-  const currentUser = mockPeopleSearch.find(u => u.id === 201) || { followersCount: 12500, followersList: [] };
+  const mockUser = mockPeopleSearch.find(u => u.id === 201) || { followersCount: 12500, followersList: [] };
+  const currentUser = { ...mockUser, ...appUser };
+  const donations = currentUser.donationsCount || 0;
 
   const getTimeRemaining = (postId) => {
     const exp = turbosActive[postId];
@@ -60,9 +62,14 @@ export default function MeuPerfil({ onRestaurantClick, onPostClick, favoriteRest
               style={{ width: '100px', height: '100px', borderRadius: '50%', objectFit: 'cover' }} 
             />
             <div>
-              <h1 style={{ fontSize: '24px', fontWeight: 700, margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <h1 style={{ fontSize: '24px', fontWeight: 700, margin: 0, display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                 {profileData.name} 
                 {premium && <Crown size={18} fill="#f59e0b" color="#f59e0b" style={{ filter: 'drop-shadow(0 0 2px rgba(245,158,11,0.3))' }} />}
+                {donations > 0 && (
+                  <span style={{ fontSize: '12px', background: 'linear-gradient(135deg, #be123c, #9f1239)', color: 'white', padding: '4px 8px', borderRadius: '12px', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '4px', boxShadow: '0 2px 8px rgba(190,18,60,0.3)' }}>
+                    <Heart size={12} fill="currentColor" /> Cliente Solidário
+                  </span>
+                )}
                 <span style={{ fontSize: '16px', fontWeight: 400, color: 'var(--text-muted)' }}>(@anitta_s)</span>
               </h1>
               <div style={{ color: '#6b7280', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '4px' }}>
@@ -129,6 +136,28 @@ export default function MeuPerfil({ onRestaurantClick, onPostClick, favoriteRest
           </div>
         </div>
       </div>
+
+      {donations > 0 && (
+        <div style={{ background: 'linear-gradient(135deg, #fff1f2, #ffe4e6)', padding: '20px', borderRadius: '16px', marginBottom: '32px', border: '1px solid #fda4af' }}>
+          <h2 style={{ fontSize: '18px', fontWeight: 800, color: '#be123c', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Heart size={20} fill="currentColor" /> Dashboard de Impacto
+          </h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+            <div style={{ background: 'white', padding: '16px', borderRadius: '12px', boxShadow: '0 2px 10px rgba(190,18,60,0.05)' }}>
+              <div style={{ fontSize: '24px', fontWeight: 800, color: '#be123c' }}>{donations}</div>
+              <div style={{ fontSize: '13px', color: '#881337', fontWeight: 600 }}>Refeições doadas por você</div>
+            </div>
+            <div style={{ background: 'white', padding: '16px', borderRadius: '12px', boxShadow: '0 2px 10px rgba(190,18,60,0.05)' }}>
+              <div style={{ fontSize: '24px', fontWeight: 800, color: '#be123c' }}>12.4k</div>
+              <div style={{ fontSize: '13px', color: '#881337', fontWeight: 600 }}>Refeições doadas pela comunidade</div>
+            </div>
+            <div style={{ background: 'white', padding: '16px', borderRadius: '12px', boxShadow: '0 2px 10px rgba(190,18,60,0.05)' }}>
+              <div style={{ fontSize: '16px', fontWeight: 800, color: '#be123c', lineHeight: 1.2, marginBottom: '4px' }}>Ação da Cidadania</div>
+              <div style={{ fontSize: '13px', color: '#881337', fontWeight: 600 }}>ONG Parceira</div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <h2 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
         <Heart size={20} className="primary-color" /> Meus Favoritos Recentes

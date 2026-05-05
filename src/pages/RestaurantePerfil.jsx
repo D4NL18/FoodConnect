@@ -162,6 +162,14 @@ export default function RestaurantePerfil({ restaurantId, onBack, onOpenMenu, on
                   </div>
                 )}
                 
+                {/* Social Partner Badge */}
+                {restaurant.isSocialPartner && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: '#fff1f2', color: '#be123c', padding: '6px 12px', borderRadius: '6px', fontSize: '13px', fontWeight: 800, marginTop: '8px', border: '1px solid #fda4af', width: 'fit-content' }}>
+                    <Heart size={16} fill="currentColor" />
+                    <span>ESTE RESTAURANTE COMBATE A FOME</span>
+                  </div>
+                )}
+                
                 {restaurant.handle && <div style={{ fontSize: '16px', color: 'var(--text-muted)', fontWeight: 500, marginTop: '8px' }}>{restaurant.handle}</div>}
               </div>
               <div style={{ display: 'flex', gap: '16px', alignItems: 'center', color: '#4b5563', fontSize: '15px', marginBottom: '16px' }}>

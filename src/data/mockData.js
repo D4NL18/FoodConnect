@@ -9,10 +9,10 @@ export const mockRestaurants = [
     rating: 4.8,
     priceRange: 'R$ ~50,00',
     distance: 'A 5km',
-    status: 'Vazio',
     highlightReason: 'Porque gosta de comida vegana',
     highlightDesc: 'A IA detectou que este restaurante tem o prato "Bowl de Quinoa" mais elogiado por utilizadores com perfil semelhante ao seu.',
     features: ['Pet Friendly', 'Vegano', 'Ar Livre'],
+    isSocialPartner: true,
     awards: [
       { id: 101, type: 'michelin-green', value: 1, year: '2024', name: 'Estrela Verde Michelin', organization: 'Guia Michelin', description: 'Gastronomia e Sustentabilidade.' },
       { id: 102, type: 'standard', name: 'Melhor Restaurante Vegano', year: '2023', organization: 'Veja Comer & Beber', description: 'Prêmio de melhor escolha sustentável e vegana.' }
@@ -47,6 +47,7 @@ export const mockRestaurants = [
     highlightReason: 'Excelente para Casais',
     highlightDesc: 'Massa fresca artesanal e a melhor carta de vinhos tintos da zona sul.',
     features: ['Estacionamento', 'Carta de Vinhos', 'Música ao Vivo'],
+    isSocialPartner: true,
     awards: [
       { id: 3, type: 'michelin-bib', value: 1, year: '2024', name: 'Bib Gourmand', organization: 'Guia Michelin', description: 'Excelente custo-benefício.' }
     ]
@@ -323,6 +324,7 @@ export const mockPeopleSearch = [
     avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80',
     followersCount: 12500,
     isFamous: true,
+    donationsCount: 5,
     tastes: ['Vegetariano', 'Vinhos', 'Doces Artesanais'],
     followersList: [
       { id: 202, name: 'Pedro Henrique', handle: '@pedro.h', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80' },

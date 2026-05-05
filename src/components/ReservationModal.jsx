@@ -6,6 +6,7 @@ export default function ReservationModal({ isOpen, onClose, restaurantName, onCo
   const [partySize, setPartySize] = useState('2 pessoas');
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
+  const [donate, setDonate] = useState(false);
 
   if (!isOpen) return null;
 
@@ -58,6 +59,24 @@ export default function ReservationModal({ isOpen, onClose, restaurantName, onCo
                   ))}
                 </div>
               </div>
+
+              <div style={{ marginTop: '24px', padding: '16px', background: '#fff1f2', borderRadius: '12px', border: '1px solid #fecdd3', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                <input 
+                  type="checkbox" 
+                  id="donate-check" 
+                  checked={donate} 
+                  onChange={e => setDonate(e.target.checked)} 
+                  style={{ width: '20px', height: '20px', marginTop: '2px', accentColor: '#e11d48', cursor: 'pointer' }} 
+                />
+                <label htmlFor="donate-check" style={{ cursor: 'pointer', flex: 1 }}>
+                  <div style={{ fontWeight: 700, color: '#be123c', fontSize: '15px', marginBottom: '4px' }}>
+                    Deseja adicionar +R$ 1,00 para doar uma refeição?
+                  </div>
+                  <div style={{ fontSize: '13px', color: '#9f1239', lineHeight: 1.4 }}>
+                    Sua doação será direcionada para a ONG <strong>Ação da Cidadania</strong> e o restaurante receberá o selo de parceiro.
+                  </div>
+                </label>
+              </div>
             </>
           ) : (
             <div style={{ textAlign: 'center', padding: '24px 0' }}>
@@ -73,7 +92,7 @@ export default function ReservationModal({ isOpen, onClose, restaurantName, onCo
         <div className="modal-footer">
           {step === 1 ? (
             <button className="btn-primary" onClick={() => {
-              if (onConfirm) onConfirm({ partySize, date, time });
+              if (onConfirm) onConfirm({ partySize, date, time, willDonate: donate });
               setStep(2);
             }}>Confirmar Reserva</button>
           ) : (

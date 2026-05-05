@@ -293,7 +293,12 @@ function App() {
         restaurantId={activeRestaurant}
         onBack={() => setActiveRestaurant(null)}
         onOpenMenu={() => setActiveMenu(true)}
-        onReserve={(res) => setReservations(prev => [...prev, { ...res, id: Date.now(), status: 'Pendente', customerName: user?.type === 'cliente' ? user.name : 'Cliente Anônimo' }])}
+        onReserve={(res) => {
+          setReservations(prev => [...prev, { ...res, id: Date.now(), status: 'Pendente', customerName: user?.type === 'cliente' ? user.name : 'Cliente Anônimo' }]);
+          if (res.willDonate && user) {
+            setUser(prev => ({ ...prev, donationsCount: (prev.donationsCount || 0) + 1 }));
+          }
+        }}
         favoriteRestaurants={favoriteRestaurants}
         toggleFavorite={toggleFavoriteRestaurant}
         currentUser={user}
@@ -371,14 +376,17 @@ function App() {
             restaurantId={user.id}
             onBack={null} // Sem botão de voltar para o próprio restaurante
             onOpenMenu={() => setActiveMenu(true)}
-            onReserve={(res) => setReservations(prev => [...prev, res])}
+            onReserve={(res) => {
+              setReservations(prev => [...prev, res]);
+              if (res.willDonate && user) setUser(prev => ({ ...prev, donationsCount: (prev.donationsCount || 0) + 1 }));
+            }}
             favoriteRestaurants={favoriteRestaurants}
             toggleFavorite={toggleFavoriteRestaurant}
             currentUser={user}
           />
         );
       }
-      return <MeuPerfil onRestaurantClick={setActiveRestaurant} onPostClick={setActivePost} favoriteRestaurants={favoriteRestaurants} turboBalance={turboBalance} turbosActive={turbosActive} onBoostPost={handleBoostPost} onGoToTurbos={() => setActivePage('turbos')} premium={user?.premium} />;
+      return <MeuPerfil onRestaurantClick={setActiveRestaurant} onPostClick={setActivePost} favoriteRestaurants={favoriteRestaurants} turboBalance={turboBalance} turbosActive={turbosActive} onBoostPost={handleBoostPost} onGoToTurbos={() => setActivePage('turbos')} premium={user?.premium} currentUser={user} />;
     }
 
     // Otherwise we are on the 'feed' page
